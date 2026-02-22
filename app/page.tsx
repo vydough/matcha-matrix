@@ -2,7 +2,11 @@
 
 import { useState } from 'react'
 import Matrix from '@/components/Matrix'
+import Image from 'next/image'
 
+/* ─────────────────────────────────────────────
+   Axis tooltip data
+───────────────────────────────────────────── */
 type TooltipInfo = {
   label: string
   emoji: string
@@ -36,6 +40,9 @@ const axisTooltips: Record<string, TooltipInfo> = {
   },
 }
 
+/* ─────────────────────────────────────────────
+   AxisLabel component with hover tooltip
+───────────────────────────────────────────── */
 function AxisLabel({
   id,
   vertical = false,
@@ -79,7 +86,6 @@ function AxisLabel({
         {info.emoji} {info.label}
       </span>
 
-      {/* Tooltip */}
       {show && (
         <div
           className={`axis-tooltip absolute z-50 ${tooltipPositionClass}`}
@@ -95,17 +101,112 @@ function AxisLabel({
   )
 }
 
+/* ─────────────────────────────────────────────
+   Logo floating sticker with CTA popup
+───────────────────────────────────────────── */
+function LogoSticker() {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <div className="logo-fab">
+      {/* Popup card */}
+      {open && (
+        <div className="logo-popup">
+          <p className="logo-popup-title">RMIT Matcha Club</p>
+          <p className="logo-popup-sub">Melbourne&apos;s uni matcha community</p>
+          <div className="logo-popup-links">
+            <a
+              href="https://linktr.ee/rmitmatchaclub"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="logo-popup-link"
+            >
+              <span className="logo-popup-link-icon">🌳</span>
+              Linktree
+            </a>
+            <a
+              href="https://www.instagram.com/rmitmatchaclub/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="logo-popup-link"
+            >
+              <span className="logo-popup-link-icon">📸</span>
+              Instagram
+            </a>
+            <a
+              href="https://linktr.ee/rmitmatchaclub"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="logo-popup-link"
+            >
+              <span className="logo-popup-link-icon">💬</span>
+              Discord
+            </a>
+            <a
+              href="https://linktr.ee/rmitmatchaclub"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="logo-popup-link"
+            >
+              <span className="logo-popup-link-icon">📋</span>
+              Rubric
+            </a>
+          </div>
+        </div>
+      )}
+
+      {/* FAB button */}
+      <button
+        className="logo-fab-btn"
+        onClick={() => setOpen(!open)}
+        aria-label="RMIT Matcha Club links"
+      >
+        {/* PLACEHOLDER: Replace /rmc-logo.png with your actual logo file */}
+        <Image
+          src="/rmc-logo.png"
+          alt="RMIT Matcha Club"
+          width={64}
+          height={64}
+          style={{ objectFit: 'cover', borderRadius: '50%' }}
+          onError={(e) => {
+            // Hide broken image, show text fallback
+            (e.target as HTMLImageElement).style.display = 'none'
+            const fb = (e.target as HTMLImageElement).parentElement?.querySelector<HTMLElement>('.logo-fab-placeholder')
+            if (fb) fb.style.display = 'flex'
+          }}
+        />
+        <span
+          className="logo-fab-placeholder"
+          style={{
+            display: 'none',
+            position: 'absolute',
+            inset: 0,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          RMC
+        </span>
+      </button>
+    </div>
+  )
+}
+
+/* ─────────────────────────────────────────────
+   Home page
+───────────────────────────────────────────── */
 export default function Home() {
   return (
     <main className="page-root">
       {/* Header */}
       <header className="site-header">
-        <p className="site-eyebrow">Melbourne&apos;s Matcha Scene</p>
+        <p className="site-eyebrow">RMIT Matcha Club</p>
         <h1 className="site-title">Matcha Matrix</h1>
         <p className="site-sub">
           A live community map of Melbourne&apos;s matcha cafes and their most popular drinks, curated by the RMC team, rated by taste and style by you.
           Click any drink sticker to explore and rate.
         </p>
+        <p className="site-attribution">by RMIT Matcha Club</p>
       </header>
 
       {/* Matrix section */}
@@ -136,9 +237,12 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Logo floating sticker */}
+      <LogoSticker />
+
       {/* Footer */}
       <footer className="site-footer">
-        <p>Ratings update in real time &middot; Made with matcha &amp; love</p>
+        <p>Ratings update in real time &middot; Made with matcha &amp; love &middot; RMIT Matcha Club</p>
       </footer>
     </main>
   )

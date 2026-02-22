@@ -31,6 +31,8 @@ export default function CafeModal({ cafe, onClose, onRatingSubmitted }: Props) {
 
   const igUrl = `https://www.instagram.com/${cafe.instagram_handle.replace('@', '')}`
 
+  const font = 'var(--font)'
+
   return (
     <div className="modal-overlay" onClick={handleBackdropClick} role="dialog" aria-modal="true" aria-label={`${cafe.name} details`}>
       <div
@@ -44,7 +46,7 @@ export default function CafeModal({ cafe, onClose, onRatingSubmitted }: Props) {
           overflow: 'hidden',
           boxShadow: '0 24px 64px rgba(0,0,0,0.22)',
           backgroundColor: '#fff',
-          fontFamily: 'inherit',
+          fontFamily: font,
         }}
       >
         {/* Header band */}
@@ -66,6 +68,7 @@ export default function CafeModal({ cafe, onClose, onRatingSubmitted }: Props) {
               color: '#fff',
               fontSize: '0.9rem',
               fontWeight: 700,
+              fontFamily: font,
               cursor: 'pointer',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               lineHeight: 1,
@@ -96,15 +99,16 @@ export default function CafeModal({ cafe, onClose, onRatingSubmitted }: Props) {
 
           <h2 style={{
             textAlign: 'center',
-            fontFamily: "'DM Serif Display', Georgia, serif",
+            fontFamily: font,
             fontSize: '1.35rem',
-            fontWeight: 400,
+            fontWeight: 700,
             color: '#fff',
             lineHeight: 1.15,
+            letterSpacing: '-0.01em',
           }}>
             {cafe.name}
           </h2>
-          <p style={{ textAlign: 'center', fontSize: '0.8rem', color: 'rgba(255,255,255,0.72)', marginTop: 3 }}>
+          <p style={{ textAlign: 'center', fontSize: '0.8rem', fontFamily: font, color: 'rgba(255,255,255,0.72)', marginTop: 3 }}>
             {cafe.suburb}
           </p>
         </div>
@@ -113,7 +117,7 @@ export default function CafeModal({ cafe, onClose, onRatingSubmitted }: Props) {
         <div style={{ padding: '1.25rem 1.5rem 1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
 
           {/* Description */}
-          <p style={{ fontSize: '0.875rem', lineHeight: 1.6, color: 'var(--ink-2)' }}>
+          <p style={{ fontSize: '0.875rem', lineHeight: 1.6, color: 'var(--ink-2)', fontFamily: font }}>
             {cafe.description}
           </p>
 
@@ -124,7 +128,7 @@ export default function CafeModal({ cafe, onClose, onRatingSubmitted }: Props) {
             rel="noopener noreferrer"
             style={{
               display: 'inline-flex', alignItems: 'center', gap: 6,
-              fontSize: '0.82rem', fontWeight: 600,
+              fontSize: '0.82rem', fontWeight: 600, fontFamily: font,
               color: 'var(--green)', textDecoration: 'none',
             }}
           >
@@ -143,7 +147,7 @@ export default function CafeModal({ cafe, onClose, onRatingSubmitted }: Props) {
               border: '1px solid rgba(61,107,58,0.18)',
             }}>
               <p style={{
-                fontSize: '0.68rem', fontWeight: 700,
+                fontSize: '0.68rem', fontWeight: 700, fontFamily: font,
                 letterSpacing: '0.1em', textTransform: 'uppercase',
                 color: 'var(--green)', marginBottom: '0.5rem',
               }}>
@@ -151,17 +155,17 @@ export default function CafeModal({ cafe, onClose, onRatingSubmitted }: Props) {
               </p>
               <div style={{ display: 'flex', justifyContent: 'space-around' }}>
                 <div style={{ textAlign: 'center' }}>
-                  <p style={{ fontSize: '1.2rem', fontWeight: 900, color: 'var(--green)' }}>
+                  <p style={{ fontSize: '1.2rem', fontWeight: 900, color: 'var(--green)', fontFamily: font }}>
                     {fmt(cafe.avg_sweet_bitter)}
                   </p>
-                  <p style={{ fontSize: '0.7rem', color: 'var(--ink-3)', marginTop: 2 }}>🥛 Creamy / 🌱 Earthy</p>
+                  <p style={{ fontSize: '0.7rem', color: 'var(--ink-3)', marginTop: 2, fontFamily: font }}>🥛 Creamy / 🌱 Earthy</p>
                 </div>
                 <div style={{ width: 1, background: 'rgba(61,107,58,0.2)' }} />
                 <div style={{ textAlign: 'center' }}>
-                  <p style={{ fontSize: '1.2rem', fontWeight: 900, color: 'var(--green)' }}>
+                  <p style={{ fontSize: '1.2rem', fontWeight: 900, color: 'var(--green)', fontFamily: font }}>
                     {fmt(cafe.avg_creative_traditional)}
                   </p>
-                  <p style={{ fontSize: '0.7rem', color: 'var(--ink-3)', marginTop: 2 }}>🍯 Sweet / 🍃 Bitter</p>
+                  <p style={{ fontSize: '0.7rem', color: 'var(--ink-3)', marginTop: 2, fontFamily: font }}>🍯 Sweet / 🍃 Bitter</p>
                 </div>
               </div>
             </div>
@@ -175,7 +179,7 @@ export default function CafeModal({ cafe, onClose, onRatingSubmitted }: Props) {
               backgroundColor: 'rgba(26,26,26,0.04)',
               border: '1.5px dashed rgba(26,26,26,0.15)',
             }}>
-              <p style={{ fontSize: '0.85rem', color: 'var(--ink-3)' }}>No ratings yet — be the first!</p>
+              <p style={{ fontSize: '0.85rem', color: 'var(--ink-3)', fontFamily: font }}>No ratings yet — be the first!</p>
             </div>
           )}
 
@@ -185,7 +189,7 @@ export default function CafeModal({ cafe, onClose, onRatingSubmitted }: Props) {
           {/* Rating form */}
           <div>
             <p style={{
-              fontSize: '0.72rem', fontWeight: 700,
+              fontSize: '0.72rem', fontWeight: 700, fontFamily: font,
               letterSpacing: '0.1em', textTransform: 'uppercase',
               color: 'var(--ink-2)', marginBottom: '0.75rem',
             }}>

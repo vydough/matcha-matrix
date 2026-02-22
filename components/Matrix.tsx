@@ -51,6 +51,24 @@ export default function Matrix() {
       {/* Matrix grid */}
       <div className="matrix-grid" style={{ position: 'relative', width: '100%', height: '100%' }}>
 
+        {/* Corner quadrant labels */}
+        <div className="corner-label corner-tl">
+          <p className="corner-label-title">🥛🍯 Creamy &amp; Sweet</p>
+          <p className="corner-label-desc">Smooth, mellow, easy sipping</p>
+        </div>
+        <div className="corner-label corner-tr">
+          <p className="corner-label-title">🥛🍃 Creamy &amp; Bitter</p>
+          <p className="corner-label-desc">Rich, deep, velvety bite</p>
+        </div>
+        <div className="corner-label corner-bl">
+          <p className="corner-label-title">🌱🍯 Earthy &amp; Sweet</p>
+          <p className="corner-label-desc">Grassy with gentle sweetness</p>
+        </div>
+        <div className="corner-label corner-br">
+          <p className="corner-label-title">🌱🍃 Earthy &amp; Bitter</p>
+          <p className="corner-label-desc">Bold, intense, traditional</p>
+        </div>
+
         {/* Centre crosshair */}
         <div
           aria-hidden="true"
@@ -91,7 +109,7 @@ export default function Matrix() {
                 margin: '0 auto 8px',
                 animation: 'spin 0.75s linear infinite',
               }} />
-              <p style={{ fontSize: '0.8rem', color: 'var(--ink-3)' }}>Loading…</p>
+              <p style={{ fontSize: '0.8rem', color: 'var(--ink-3)', fontFamily: 'var(--font)' }}>Loading…</p>
             </div>
           </div>
         )}
@@ -107,7 +125,7 @@ export default function Matrix() {
             position: 'absolute', inset: 0,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
           }}>
-            <p style={{ fontSize: '0.85rem', color: 'var(--ink-3)' }}>
+            <p style={{ fontSize: '0.85rem', color: 'var(--ink-3)', fontFamily: 'var(--font)' }}>
               No cafes yet — add some in Supabase!
             </p>
           </div>

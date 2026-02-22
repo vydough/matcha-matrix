@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;0,9..40,900;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;0,9..40,900;1,9..40,400&display=swap');
 @import "tailwindcss";
 
 /* ─────────────────────────────────────────────
@@ -15,6 +15,7 @@
   --ink-3:      #8A8A8A;
   --rule:       rgba(26,26,26,0.10);
   --radius:     16px;
+  --font:       'Space Grotesk', 'DM Sans', system-ui, sans-serif;
 }
 
 /* ─────────────────────────────────────────────
@@ -23,7 +24,7 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  font-family: 'DM Sans', system-ui, sans-serif;
+  font-family: var(--font);
   background-color: var(--bg);
   color: var(--ink);
   min-height: 100vh;
@@ -45,36 +46,48 @@ body {
 ───────────────────────────────────────────── */
 .site-header {
   text-align: center;
-  padding: 3rem 1.5rem 1.5rem;
+  padding: 2.5rem 1.5rem 1rem;
 }
 
 .site-eyebrow {
+  font-family: var(--font);
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--green-mid);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.4rem;
 }
 
 .site-title {
-  font-family: 'DM Serif Display', Georgia, serif;
-  font-size: clamp(2.6rem, 6vw, 4.2rem);
-  font-weight: 400;
-  line-height: 1.05;
+  font-family: var(--font);
+  font-size: clamp(2.8rem, 7vw, 4.8rem);
+  font-weight: 700;
+  line-height: 1.0;
   color: var(--ink);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
 }
 
 .site-sub {
-  margin-top: 0.75rem;
-  font-size: 0.9rem;
+  margin-top: 0.6rem;
+  font-family: var(--font);
+  font-size: 0.85rem;
   font-weight: 400;
   color: var(--ink-3);
-  max-width: 480px;
+  max-width: 520px;
   margin-left: auto;
   margin-right: auto;
   line-height: 1.6;
+}
+
+.site-attribution {
+  margin-top: 0.35rem;
+  font-family: var(--font);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--green);
+  letter-spacing: 0.05em;
 }
 
 /* ─────────────────────────────────────────────
@@ -83,13 +96,13 @@ body {
 .matrix-section {
   flex: 1;
   display: flex;
-  padding: 1.5rem 2rem 2rem;
+  padding: 1rem 1.5rem 2rem;
 }
 
 /* CSS grid layout for the axis labels + matrix */
 .matrix-layout {
   flex: 1;
-  max-width: 860px;
+  max-width: 1100px;
   margin: 0 auto;
   width: 100%;
   display: grid;
@@ -98,7 +111,7 @@ body {
     "left  grid   right"
     ".     bottom .";
   grid-template-columns: 56px 1fr 56px;
-  grid-template-rows: 48px 1fr 48px;
+  grid-template-rows: 44px 1fr 44px;
   gap: 0;
 }
 
@@ -111,13 +124,14 @@ body {
 .matrix-cell {
   grid-area: grid;
   position: relative;
-  min-height: 420px;
+  min-height: 620px;
 }
 
 /* ─────────────────────────────────────────────
    Axis labels
 ───────────────────────────────────────────── */
 .axis-label {
+  font-family: var(--font);
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.12em;
@@ -145,6 +159,7 @@ body {
   pointer-events: none;
   box-shadow: 0 8px 24px rgba(0,0,0,0.18);
   animation: tooltip-in 0.15s ease both;
+  font-family: var(--font);
 }
 
 @keyframes tooltip-in {
@@ -170,6 +185,7 @@ body {
 }
 
 .tooltip-title {
+  font-family: var(--font);
   font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -178,6 +194,7 @@ body {
 }
 
 .tooltip-body {
+  font-family: var(--font);
   font-size: 0.75rem;
   font-weight: 400;
   line-height: 1.55;
@@ -196,9 +213,42 @@ body {
   border: 1.5px solid var(--rule);
   background-color: var(--surface);
   /* Dotted background */
-  background-image: radial-gradient(circle, rgba(26,26,26,0.18) 1px, transparent 1px);
+  background-image: radial-gradient(circle, rgba(26,26,26,0.15) 1px, transparent 1px);
   background-size: 28px 28px;
 }
+
+/* ─────────────────────────────────────────────
+   Corner quadrant labels
+───────────────────────────────────────────── */
+.corner-label {
+  position: absolute;
+  z-index: 2;
+  pointer-events: none;
+  padding: 12px 16px;
+  max-width: 180px;
+  font-family: var(--font);
+}
+
+.corner-label-title {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  margin-bottom: 2px;
+}
+
+.corner-label-desc {
+  font-size: 0.65rem;
+  font-weight: 500;
+  color: var(--ink-3);
+  line-height: 1.4;
+}
+
+.corner-tl { top: 0; left: 0; text-align: left; }
+.corner-tr { top: 0; right: 0; text-align: right; }
+.corner-bl { bottom: 0; left: 0; text-align: left; }
+.corner-br { bottom: 0; right: 0; text-align: right; }
 
 /* ─────────────────────────────────────────────
    Stickers
@@ -222,6 +272,7 @@ body {
   gap: 4px;
   transition: transform 0.2s ease;
   filter: drop-shadow(0 3px 8px rgba(0,0,0,0.20));
+  font-family: var(--font);
 }
 
 .sticker:hover { transform: scale(1.1); }
@@ -278,11 +329,133 @@ input[type='range']::-moz-range-thumb {
 }
 
 /* ─────────────────────────────────────────────
+   Logo sticker (floating)
+───────────────────────────────────────────── */
+.logo-fab {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 40;
+  font-family: var(--font);
+}
+
+.logo-fab-btn {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 3px solid var(--green);
+  background: var(--green-light);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+  transition: transform 0.2s, box-shadow 0.2s;
+  animation: fab-bounce 0.5s ease both;
+  animation-delay: 0.6s;
+  overflow: hidden;
+  padding: 0;
+}
+
+.logo-fab-btn:hover {
+  transform: scale(1.08);
+  box-shadow: 0 6px 28px rgba(0,0,0,0.24);
+}
+
+/* placeholder circle text */
+.logo-fab-btn img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.logo-fab-placeholder {
+  font-family: var(--font);
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: var(--green);
+  text-align: center;
+  line-height: 1.1;
+  letter-spacing: 0.02em;
+}
+
+@keyframes fab-bounce {
+  0% { opacity: 0; transform: scale(0.4) translateY(20px); }
+  60% { opacity: 1; transform: scale(1.1) translateY(-4px); }
+  100% { transform: scale(1) translateY(0); }
+}
+
+.logo-popup {
+  position: absolute;
+  bottom: 76px;
+  right: 0;
+  width: 260px;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.18);
+  padding: 1.25rem;
+  animation: popup-slide 0.2s ease both;
+  font-family: var(--font);
+}
+
+@keyframes popup-slide {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.logo-popup-title {
+  font-family: var(--font);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 0.15rem;
+}
+
+.logo-popup-sub {
+  font-family: var(--font);
+  font-size: 0.7rem;
+  color: var(--ink-3);
+  margin-bottom: 0.75rem;
+}
+
+.logo-popup-links {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.logo-popup-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--green-light);
+  color: var(--green);
+  text-decoration: none;
+  font-family: var(--font);
+  font-size: 0.78rem;
+  font-weight: 600;
+  transition: background 0.15s;
+}
+
+.logo-popup-link:hover {
+  background: rgba(61,107,58,0.18);
+}
+
+.logo-popup-link-icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+/* ─────────────────────────────────────────────
    Footer
 ───────────────────────────────────────────── */
 .site-footer {
   padding: 1.25rem;
   text-align: center;
+  font-family: var(--font);
   font-size: 0.72rem;
   color: var(--ink-3);
   letter-spacing: 0.03em;

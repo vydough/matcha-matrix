@@ -37,7 +37,16 @@ export default function RatingForm({ cafeId, onSubmitted }: Props) {
     onSubmitted()
   }
 
-  // Texture axis: Creamy (+5) ↔ Earthy (-5)
+  /*
+    sweet_bitter: Y-axis
+      +5 = top   = Creamy (🥛)
+      -5 = bottom = Earthy (🌱)
+
+    creative_traditional: X-axis
+      -5 = left  = Sweet (🍯)
+      +5 = right = Bitter (🍃)
+  */
+
   const getLabelForCreamyEarthy = (val: number) => {
     if (val >= 4) return '🥛 Very Creamy'
     if (val >= 1) return '🥛 Creamy'
@@ -46,36 +55,39 @@ export default function RatingForm({ cafeId, onSubmitted }: Props) {
     return '🌱 Very Earthy'
   }
 
-  // Sweetness axis: Sweet (+5) ↔ Bitter (-5)
   const getLabelForSweetBitter = (val: number) => {
-    if (val >= 4) return '🍯 Very Sweet'
-    if (val >= 1) return '🍯 Sweet'
+    if (val <= -4) return '🍯 Very Sweet'
+    if (val <= -1) return '🍯 Sweet'
     if (val === 0) return 'Balanced'
-    if (val >= -3) return '🍃 Bitter'
+    if (val <= 3) return '🍃 Bitter'
     return '🍃 Very Bitter'
   }
 
-  const inputStyle = {
-    display: 'block',
-    width: '100%',
-    marginTop: '0.5rem',
+  const labelStyle: React.CSSProperties = {
+    fontSize: '0.72rem',
+    fontWeight: 700,
+    letterSpacing: '0.08em',
+    textTransform: 'uppercase',
+    color: 'var(--ink-3)',
+    fontFamily: 'var(--font)',
+  }
+
+  const centerLabelStyle: React.CSSProperties = {
+    fontSize: '0.8rem',
+    fontWeight: 700,
+    color: 'var(--green)',
+    fontFamily: 'var(--font)',
   }
 
   return (
-    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', fontFamily: 'var(--font)' }}>
 
-      {/* Texture: Creamy ↔ Earthy */}
+      {/* Texture: Earthy (-5) ← slider → Creamy (+5) */}
       <div>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
-          <span style={{ fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--ink-3)' }}>
-            🥛 Creamy
-          </span>
-          <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--green)' }}>
-            {getLabelForCreamyEarthy(sweetBitter)}
-          </span>
-          <span style={{ fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--ink-3)' }}>
-            🌱 Earthy
-          </span>
+          <span style={labelStyle}>🌱 Earthy</span>
+          <span style={centerLabelStyle}>{getLabelForCreamyEarthy(sweetBitter)}</span>
+          <span style={labelStyle}>🥛 Creamy</span>
         </div>
         <input
           type="range"
@@ -84,23 +96,17 @@ export default function RatingForm({ cafeId, onSubmitted }: Props) {
           step={1}
           value={sweetBitter}
           onChange={(e) => setSweetBitter(parseInt(e.target.value))}
-          style={inputStyle}
-          aria-label="Creamy to Earthy rating"
+          style={{ display: 'block', width: '100%', marginTop: '0.5rem' }}
+          aria-label="Earthy to Creamy rating"
         />
       </div>
 
-      {/* Sweetness: Sweet ↔ Bitter */}
+      {/* Sweetness: Sweet (-5) ← slider → Bitter (+5) */}
       <div>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
-          <span style={{ fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--ink-3)' }}>
-            🍯 Sweet
-          </span>
-          <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--green)' }}>
-            {getLabelForSweetBitter(creativeTraditional)}
-          </span>
-          <span style={{ fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--ink-3)' }}>
-            🍃 Bitter
-          </span>
+          <span style={labelStyle}>🍯 Sweet</span>
+          <span style={centerLabelStyle}>{getLabelForSweetBitter(creativeTraditional)}</span>
+          <span style={labelStyle}>🍃 Bitter</span>
         </div>
         <input
           type="range"
@@ -109,13 +115,13 @@ export default function RatingForm({ cafeId, onSubmitted }: Props) {
           step={1}
           value={creativeTraditional}
           onChange={(e) => setCreativeTraditional(parseInt(e.target.value))}
-          style={inputStyle}
+          style={{ display: 'block', width: '100%', marginTop: '0.5rem' }}
           aria-label="Sweet to Bitter rating"
         />
       </div>
 
       {error && (
-        <p style={{ fontSize: '0.8rem', color: '#c0392b', textAlign: 'center' }}>{error}</p>
+        <p style={{ fontSize: '0.8rem', color: '#c0392b', textAlign: 'center', fontFamily: 'var(--font)' }}>{error}</p>
       )}
 
       <button
@@ -125,11 +131,11 @@ export default function RatingForm({ cafeId, onSubmitted }: Props) {
           width: '100%',
           padding: '0.85rem 1.5rem',
           borderRadius: '10px',
-          fontFamily: 'inherit',
+          fontFamily: 'var(--font)',
           fontSize: '0.85rem',
           fontWeight: 700,
           letterSpacing: '0.06em',
-          textTransform: 'uppercase',
+          textTransform: 'uppercase' as const,
           border: 'none',
           cursor: submitting ? 'not-allowed' : 'pointer',
           opacity: submitting ? 0.6 : 1,

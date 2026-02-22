@@ -77,6 +77,7 @@ export default function Sticker({ cafe, onClick }: Props) {
 
         {/* Name label */}
         <span style={{
+          fontFamily: 'var(--font)',
           fontSize: '0.67rem',
           fontWeight: 700,
           color: 'var(--ink)',
