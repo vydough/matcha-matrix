@@ -1,8 +1,5 @@
 {
   "buildCommand": "npm run build",
   "outputDirectory": ".next",
-  "installCommand": "npm install",
-  "git": {
-    "deploymentEnabled": true
-  }
+  "installCommand": "npm ci --prefer-offline --no-audit"
 }
