@@ -161,7 +161,6 @@ function LogoSticker() {
         onClick={() => setOpen(!open)}
         aria-label="RMIT Matcha Club links"
       >
-        {/* PLACEHOLDER: Replace /rmc-logo.png with your actual logo file */}
         <Image
           src="/rmc.png"
           alt="RMIT Matcha Club"
