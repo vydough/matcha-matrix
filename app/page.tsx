@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Matrix from '@/components/Matrix'
-import Image from 'next/image'
+/* next/image removed — using plain <img> for logo to avoid optimization issues */
 
 /* ─────────────────────────────────────────────
    Axis tooltip data
@@ -161,16 +161,16 @@ function LogoSticker() {
         onClick={() => setOpen(!open)}
         aria-label="RMIT Matcha Club links"
       >
-        <Image
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
           src="/rmc.png"
           alt="RMIT Matcha Club"
           width={64}
           height={64}
-          style={{ objectFit: 'cover', borderRadius: '50%' }}
+          style={{ objectFit: 'cover', borderRadius: '50%', display: 'block' }}
           onError={(e) => {
-            // Hide broken image, show text fallback
-            (e.target as HTMLImageElement).style.display = 'none'
-            const fb = (e.target as HTMLImageElement).parentElement?.querySelector<HTMLElement>('.logo-fab-placeholder')
+            (e.currentTarget as HTMLImageElement).style.display = 'none'
+            const fb = (e.currentTarget as HTMLImageElement).parentElement?.querySelector<HTMLElement>('.logo-fab-placeholder')
             if (fb) fb.style.display = 'flex'
           }}
         />

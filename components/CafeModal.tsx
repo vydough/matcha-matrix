@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
-import Image from 'next/image'
 import { type Cafe } from '@/lib/supabase'
 import RatingForm from './RatingForm'
 
@@ -76,26 +75,6 @@ export default function CafeModal({ cafe, onClose, onRatingSubmitted }: Props) {
           >
             ✕
           </button>
-
-          {/* Sticker */}
-          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '0.75rem' }}>
-            <div style={{
-              width: 80, height: 80,
-              borderRadius: '50%',
-              overflow: 'hidden',
-              border: '3px solid rgba(255,255,255,0.5)',
-              position: 'relative',
-              backgroundColor: 'rgba(255,255,255,0.15)',
-            }}>
-              <Image
-                src={cafe.sticker_url}
-                alt={cafe.name}
-                fill
-                style={{ objectFit: 'cover' }}
-                onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
-              />
-            </div>
-          </div>
 
           <h2 style={{
             textAlign: 'center',
