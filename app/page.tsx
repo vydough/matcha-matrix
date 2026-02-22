@@ -21,8 +21,8 @@ export default function Home() {
           className="mt-2 text-sm md:text-base max-w-xl mx-auto leading-relaxed"
           style={{ color: 'var(--soft-brown)' }}
         >
-          A live community map of Melbourne&apos;s matcha cafes, rated by taste and style.
-          Click any sticker to explore and rate.
+          A live community map of Melbourne&apos;s matcha cafes and their most 'popular' drinks, curated by the RMC team, rated by taste and style by you.
+          Click any drink sticker to explore and rate.
         </p>
       </header>
 
