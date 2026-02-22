@@ -113,7 +113,7 @@ function LogoSticker() {
       {open && (
         <div className="logo-popup">
           <p className="logo-popup-title">RMIT Matcha Club</p>
-          <p className="logo-popup-sub">Melbourne&apos;s uni matcha community</p>
+          <p className="logo-popup-sub">Supported by RMIT Matcha Club&apos;s matcha community</p>
           <div className="logo-popup-links">
             <a
               href="https://linktr.ee/rmitmatchaclub"
@@ -203,7 +203,7 @@ export default function Home() {
         <p className="site-eyebrow">RMIT Matcha Club</p>
         <h1 className="site-title">Matcha Matrix</h1>
         <p className="site-sub">
-          A live community map of Melbourne&apos;s matcha cafes and their most popular drinks, curated by the RMC team, rated by taste and style by you.
+          A live community map of Melbourne&apos;s matcha cafes and their iconic traditional matcha lattes, curated by the RMC team, rated by taste and style by you.
           Click any drink sticker to explore and rate.
         </p>
         <p className="site-attribution">by RMIT Matcha Club</p>
