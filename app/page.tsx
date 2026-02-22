@@ -125,7 +125,7 @@ function LogoSticker() {
               Linktree
             </a>
             <a
-              href="https://www.instagram.com/rmitmatchaclub/"
+              href="https://www.instagram.com/rmit.matchaclub/"
               target="_blank"
               rel="noopener noreferrer"
               className="logo-popup-link"
@@ -134,7 +134,7 @@ function LogoSticker() {
               Instagram
             </a>
             <a
-              href="https://linktr.ee/rmitmatchaclub"
+              href="https://discord.com/invite/knVk3v5YHS?fbclid=PAQ0xDSwL88phleHRuA2FlbQIxMQABpwahw6YAu9zWR2aEqTT8xuJTK2xy_92ujTQgttbcJRo6oDnR4KCEhI3eKez2_aem_JA2yeUwQKIeZAeM0usbqSw"
               target="_blank"
               rel="noopener noreferrer"
               className="logo-popup-link"
@@ -143,7 +143,7 @@ function LogoSticker() {
               Discord
             </a>
             <a
-              href="https://linktr.ee/rmitmatchaclub"
+              href="https://campus.hellorubric.com/?eid=40824"
               target="_blank"
               rel="noopener noreferrer"
               className="logo-popup-link"
@@ -163,7 +163,7 @@ function LogoSticker() {
       >
         {/* PLACEHOLDER: Replace /rmc-logo.png with your actual logo file */}
         <Image
-          src="/rmc-logo.png"
+          src="/rmc.png"
           alt="RMIT Matcha Club"
           width={64}
           height={64}
