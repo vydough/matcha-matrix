@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
-  <circle cx="50" cy="50" r="48" fill="#3F4A3C" stroke="#F5F1E8" stroke-width="3"/>
-  <circle cx="50" cy="50" r="35" fill="#6EA63A" opacity="0.3"/>
-  <text x="50" y="45" font-family="serif" font-size="13" font-weight="bold" fill="#F5F1E8" text-anchor="middle">MATCHA</text>
-  <text x="50" y="62" font-family="serif" font-size="13" font-weight="bold" fill="#F5F1E8" text-anchor="middle">KONA</text>
-  <circle cx="50" cy="78" r="4" fill="#6EA63A"/>
-</svg>
