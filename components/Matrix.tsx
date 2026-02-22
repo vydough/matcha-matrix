@@ -24,27 +24,21 @@ export default function Matrix() {
     setLoading(false)
   }, [])
 
-  // Initial fetch
   useEffect(() => {
     fetchCafes()
   }, [fetchCafes])
 
-  // Realtime subscription on ratings table
   useEffect(() => {
     const channel = supabase
       .channel('ratings')
       .on(
         'postgres_changes',
         { event: 'INSERT', schema: 'public', table: 'ratings' },
-        () => {
-          fetchCafes()
-        }
+        () => { fetchCafes() }
       )
       .subscribe()
 
-    return () => {
-      supabase.removeChannel(channel)
-    }
+    return () => { supabase.removeChannel(channel) }
   }, [fetchCafes])
 
   const handleRatingSubmitted = useCallback(() => {
@@ -53,67 +47,68 @@ export default function Matrix() {
   }, [fetchCafes])
 
   return (
-    <div className="relative w-full h-full">
-      {/* Matrix container */}
-      <div
-        className="matrix-grid relative w-full h-full rounded-2xl overflow-hidden border"
-        style={{
-          borderColor: 'rgba(63,74,60,0.2)',
-          backgroundColor: 'rgba(245,241,232,0.6)',
-        }}
-      >
-        {/* Center crosshair lines */}
+    <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+      {/* Matrix grid */}
+      <div className="matrix-grid" style={{ position: 'relative', width: '100%', height: '100%' }}>
+
+        {/* Centre crosshair */}
         <div
-          className="absolute inset-0 pointer-events-none"
           aria-hidden="true"
+          style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}
         >
-          {/* Horizontal center line */}
-          <div
-            className="absolute w-full"
-            style={{
-              top: '50%',
-              height: '1px',
-              backgroundColor: 'rgba(63,74,60,0.25)',
-            }}
-          />
-          {/* Vertical center line */}
-          <div
-            className="absolute h-full"
-            style={{
-              left: '50%',
-              width: '1px',
-              backgroundColor: 'rgba(63,74,60,0.25)',
-            }}
-          />
+          {/* Horizontal line */}
+          <div style={{
+            position: 'absolute',
+            top: '50%',
+            left: 0,
+            right: 0,
+            height: '1px',
+            background: 'rgba(26,26,26,0.12)',
+          }} />
+          {/* Vertical line */}
+          <div style={{
+            position: 'absolute',
+            left: '50%',
+            top: 0,
+            bottom: 0,
+            width: '1px',
+            background: 'rgba(26,26,26,0.12)',
+          }} />
         </div>
 
-        {/* Loading state */}
+        {/* Loading */}
         {loading && (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="text-center space-y-2">
-              <div
-                className="w-8 h-8 border-2 border-t-transparent rounded-full animate-spin mx-auto"
-                style={{ borderColor: 'var(--matcha-green)', borderTopColor: 'transparent' }}
-              />
-              <p className="text-sm" style={{ color: 'var(--soft-brown)' }}>Loading cafes...</p>
+          <div style={{
+            position: 'absolute', inset: 0,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{
+                width: 28, height: 28,
+                border: '2.5px solid var(--green)',
+                borderTopColor: 'transparent',
+                borderRadius: '50%',
+                margin: '0 auto 8px',
+                animation: 'spin 0.75s linear infinite',
+              }} />
+              <p style={{ fontSize: '0.8rem', color: 'var(--ink-3)' }}>Loading…</p>
             </div>
           </div>
         )}
 
         {/* Stickers */}
         {!loading && cafes.map((cafe) => (
-          <Sticker
-            key={cafe.id}
-            cafe={cafe}
-            onClick={setSelectedCafe}
-          />
+          <Sticker key={cafe.id} cafe={cafe} onClick={setSelectedCafe} />
         ))}
 
         {/* Empty state */}
         {!loading && cafes.length === 0 && (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <p className="text-sm" style={{ color: 'var(--soft-brown)' }}>
-              No cafes found. Add some in Supabase!
+          <div style={{
+            position: 'absolute', inset: 0,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}>
+            <p style={{ fontSize: '0.85rem', color: 'var(--ink-3)' }}>
+              No cafes yet — add some in Supabase!
             </p>
           </div>
         )}
@@ -127,6 +122,12 @@ export default function Matrix() {
           onRatingSubmitted={handleRatingSubmitted}
         />
       )}
+
+      <style>{`
+        @keyframes spin {
+          to { transform: rotate(360deg); }
+        }
+      `}</style>
     </div>
   )
 }

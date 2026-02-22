@@ -1,105 +1,144 @@
+'use client'
+
+import { useState } from 'react'
 import Matrix from '@/components/Matrix'
+
+type TooltipInfo = {
+  label: string
+  emoji: string
+  description: string
+}
+
+const axisTooltips: Record<string, TooltipInfo> = {
+  creamy: {
+    label: 'Creamy',
+    emoji: '🥛',
+    description:
+      'Smooth, rounded, and mellow. Low bitterness with a soft finish. Often slightly sweet and pairs beautifully with milk. Think silky, balanced, and refined.',
+  },
+  earthy: {
+    label: 'Earthy',
+    emoji: '🌱',
+    description:
+      'Bold, vegetal, and grassy. Stronger green tea depth with a more natural, plant-forward character. Can feel rustic, dry, or intensely "green."',
+  },
+  sweet: {
+    label: 'Sweet',
+    emoji: '🍯',
+    description:
+      'Naturally mellow with subtle sweetness. Less sharpness, minimal astringency, and an easy-to-drink profile.',
+  },
+  bitter: {
+    label: 'Bitter',
+    emoji: '🍃',
+    description:
+      'Sharper and more intense. A pronounced green tea bite with lingering depth. Can feel bold, dry, or slightly astringent.',
+  },
+}
+
+function AxisLabel({
+  id,
+  vertical = false,
+  flip = false,
+  position,
+}: {
+  id: keyof typeof axisTooltips
+  vertical?: boolean
+  flip?: boolean
+  position: 'top' | 'bottom' | 'left' | 'right'
+}) {
+  const [show, setShow] = useState(false)
+  const info = axisTooltips[id]
+
+  const tooltipPositionClass =
+    position === 'top'
+      ? 'top-full left-1/2 -translate-x-1/2 mt-2'
+      : position === 'bottom'
+      ? 'bottom-full left-1/2 -translate-x-1/2 mb-2'
+      : position === 'left'
+      ? 'left-full top-1/2 -translate-y-1/2 ml-2'
+      : 'right-full top-1/2 -translate-y-1/2 mr-2'
+
+  return (
+    <div
+      className="relative flex items-center justify-center"
+      onMouseEnter={() => setShow(true)}
+      onMouseLeave={() => setShow(false)}
+    >
+      <span
+        className="axis-label cursor-help select-none"
+        style={
+          vertical
+            ? {
+                writingMode: 'vertical-rl',
+                transform: flip ? 'rotate(180deg)' : 'none',
+              }
+            : {}
+        }
+      >
+        {info.emoji} {info.label}
+      </span>
+
+      {/* Tooltip */}
+      {show && (
+        <div
+          className={`axis-tooltip absolute z-50 ${tooltipPositionClass}`}
+          role="tooltip"
+        >
+          <p className="tooltip-title">
+            {info.emoji} {info.label}
+          </p>
+          <p className="tooltip-body">{info.description}</p>
+        </div>
+      )}
+    </div>
+  )
+}
 
 export default function Home() {
   return (
-    <main
-      className="min-h-screen flex flex-col"
-      style={{ backgroundColor: 'var(--cream)' }}
-    >
+    <main className="page-root">
       {/* Header */}
-      <header className="px-6 pt-8 pb-4 text-center">
-        <h1
-          className="text-4xl md:text-5xl font-bold tracking-tight"
-          style={{
-            fontFamily: "'Playfair Display', serif",
-            color: 'var(--dark-olive)',
-          }}
-        >
-          RMC&apos;s Matcha Matrix
-        </h1>
-        <p
-          className="mt-2 text-sm md:text-base max-w-xl mx-auto leading-relaxed"
-          style={{ color: 'var(--soft-brown)' }}
-        >
-          A live community map of Melbourne&apos;s matcha cafes and their most 'popular' drinks, curated by the RMC team, rated by taste and style by you.
+      <header className="site-header">
+        <p className="site-eyebrow">Melbourne&apos;s Matcha Scene</p>
+        <h1 className="site-title">Matcha Matrix</h1>
+        <p className="site-sub">
+          A live community map of Melbourne&apos;s matcha cafes and their most popular drinks, curated by the RMC team, rated by taste and style by you.
           Click any drink sticker to explore and rate.
         </p>
       </header>
 
-      {/* Matrix area */}
-      <section className="flex-1 px-4 md:px-8 pb-8 flex flex-col">
-        <div className="flex-1 flex flex-col max-w-5xl mx-auto w-full" style={{ minHeight: 480 }}>
-
-          {/* Sweet label (top) */}
-          <div className="flex justify-center mb-2">
-            <span
-              className="text-xs font-semibold uppercase tracking-widest px-3 py-1 rounded-full"
-              style={{
-                backgroundColor: 'rgba(110,166,58,0.15)',
-                color: 'var(--matcha-green)',
-              }}
-            >
-              Sweet
-            </span>
+      {/* Matrix section */}
+      <section className="matrix-section">
+        <div className="matrix-layout">
+          {/* Top axis label — Creamy */}
+          <div className="axis-slot axis-top">
+            <AxisLabel id="creamy" position="bottom" />
           </div>
 
-          {/* Row: Traditional | Grid | Creative */}
-          <div className="flex items-stretch gap-3 flex-1">
-            {/* Traditional label (left) */}
-            <div className="flex items-center">
-              <span
-                className="text-xs font-semibold uppercase tracking-widest"
-                style={{
-                  color: 'var(--soft-brown)',
-                  writingMode: 'vertical-rl',
-                  transform: 'rotate(180deg)',
-                  letterSpacing: '0.15em',
-                }}
-              >
-                Traditional
-              </span>
-            </div>
-
-            {/* Matrix grid */}
-            <div className="flex-1 relative" style={{ minHeight: 400 }}>
-              <Matrix />
-            </div>
-
-            {/* Creative label (right) */}
-            <div className="flex items-center">
-              <span
-                className="text-xs font-semibold uppercase tracking-widest"
-                style={{
-                  color: 'var(--soft-brown)',
-                  writingMode: 'vertical-rl',
-                  letterSpacing: '0.15em',
-                }}
-              >
-                Creative
-              </span>
-            </div>
+          {/* Middle row: left label | grid | right label */}
+          <div className="axis-slot axis-left">
+            <AxisLabel id="sweet" vertical flip position="right" />
           </div>
 
-          {/* Bitter label (bottom) */}
-          <div className="flex justify-center mt-2">
-            <span
-              className="text-xs font-semibold uppercase tracking-widest px-3 py-1 rounded-full"
-              style={{
-                backgroundColor: 'rgba(63,74,60,0.12)',
-                color: 'var(--dark-olive)',
-              }}
-            >
-              Bitter
-            </span>
+          <div className="matrix-cell">
+            <Matrix />
+          </div>
+
+          <div className="axis-slot axis-right">
+            <AxisLabel id="bitter" vertical position="left" />
+          </div>
+
+          {/* Bottom axis label — Earthy */}
+          <div className="axis-slot axis-bottom">
+            <AxisLabel id="earthy" position="top" />
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-4 text-center">
-        <p className="text-xs" style={{ color: 'rgba(156,123,91,0.6)' }}>
-          Ratings update in real time · Made with matcha &amp; love
-        </p>
+      <footer className="site-footer">
+        <p>Ratings update in real time &middot; Made with matcha &amp; love</p>
       </footer>
     </main>
   )

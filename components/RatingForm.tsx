@@ -37,32 +37,45 @@ export default function RatingForm({ cafeId, onSubmitted }: Props) {
     onSubmitted()
   }
 
-  const getLabelForSweetBitter = (val: number) => {
-    if (val <= -3) return 'Very Bitter'
-    if (val < 0) return 'Bitter'
+  // Texture axis: Creamy (+5) ↔ Earthy (-5)
+  const getLabelForCreamyEarthy = (val: number) => {
+    if (val >= 4) return '🥛 Very Creamy'
+    if (val >= 1) return '🥛 Creamy'
     if (val === 0) return 'Balanced'
-    if (val <= 3) return 'Sweet'
-    return 'Very Sweet'
+    if (val >= -3) return '🌱 Earthy'
+    return '🌱 Very Earthy'
   }
 
-  const getLabelForCreativeTraditional = (val: number) => {
-    if (val <= -3) return 'Very Traditional'
-    if (val < 0) return 'Traditional'
+  // Sweetness axis: Sweet (+5) ↔ Bitter (-5)
+  const getLabelForSweetBitter = (val: number) => {
+    if (val >= 4) return '🍯 Very Sweet'
+    if (val >= 1) return '🍯 Sweet'
     if (val === 0) return 'Balanced'
-    if (val <= 3) return 'Creative'
-    return 'Very Creative'
+    if (val >= -3) return '🍃 Bitter'
+    return '🍃 Very Bitter'
+  }
+
+  const inputStyle = {
+    display: 'block',
+    width: '100%',
+    marginTop: '0.5rem',
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      {/* Sweet / Bitter Slider */}
+    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+
+      {/* Texture: Creamy ↔ Earthy */}
       <div>
-        <div className="flex justify-between items-center mb-2">
-          <span className="text-xs font-medium" style={{ color: 'var(--soft-brown)' }}>Bitter</span>
-          <span className="text-sm font-semibold" style={{ color: 'var(--dark-olive)' }}>
-            Taste: {getLabelForSweetBitter(sweetBitter)}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+          <span style={{ fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--ink-3)' }}>
+            🥛 Creamy
           </span>
-          <span className="text-xs font-medium" style={{ color: 'var(--soft-brown)' }}>Sweet</span>
+          <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--green)' }}>
+            {getLabelForCreamyEarthy(sweetBitter)}
+          </span>
+          <span style={{ fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--ink-3)' }}>
+            🌱 Earthy
+          </span>
         </div>
         <input
           type="range"
@@ -71,22 +84,23 @@ export default function RatingForm({ cafeId, onSubmitted }: Props) {
           step={1}
           value={sweetBitter}
           onChange={(e) => setSweetBitter(parseInt(e.target.value))}
-          className="w-full"
-          aria-label="Sweet to Bitter rating"
+          style={inputStyle}
+          aria-label="Creamy to Earthy rating"
         />
-        <div className="text-center text-xs mt-1" style={{ color: 'var(--soft-brown)' }}>
-          {sweetBitter > 0 ? '+' : ''}{sweetBitter}
-        </div>
       </div>
 
-      {/* Creative / Traditional Slider */}
+      {/* Sweetness: Sweet ↔ Bitter */}
       <div>
-        <div className="flex justify-between items-center mb-2">
-          <span className="text-xs font-medium" style={{ color: 'var(--soft-brown)' }}>Traditional</span>
-          <span className="text-sm font-semibold" style={{ color: 'var(--dark-olive)' }}>
-            Style: {getLabelForCreativeTraditional(creativeTraditional)}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+          <span style={{ fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--ink-3)' }}>
+            🍯 Sweet
           </span>
-          <span className="text-xs font-medium" style={{ color: 'var(--soft-brown)' }}>Creative</span>
+          <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--green)' }}>
+            {getLabelForSweetBitter(creativeTraditional)}
+          </span>
+          <span style={{ fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--ink-3)' }}>
+            🍃 Bitter
+          </span>
         </div>
         <input
           type="range"
@@ -95,36 +109,42 @@ export default function RatingForm({ cafeId, onSubmitted }: Props) {
           step={1}
           value={creativeTraditional}
           onChange={(e) => setCreativeTraditional(parseInt(e.target.value))}
-          className="w-full"
-          aria-label="Creative to Traditional rating"
+          style={inputStyle}
+          aria-label="Sweet to Bitter rating"
         />
-        <div className="text-center text-xs mt-1" style={{ color: 'var(--soft-brown)' }}>
-          {creativeTraditional > 0 ? '+' : ''}{creativeTraditional}
-        </div>
       </div>
 
       {error && (
-        <p className="text-red-600 text-sm text-center">{error}</p>
+        <p style={{ fontSize: '0.8rem', color: '#c0392b', textAlign: 'center' }}>{error}</p>
       )}
 
       <button
         type="submit"
         disabled={submitting}
-        className="w-full py-3 px-6 rounded-xl font-semibold text-sm transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
         style={{
-          backgroundColor: 'var(--dark-olive)',
-          color: 'var(--cream)',
+          width: '100%',
+          padding: '0.85rem 1.5rem',
+          borderRadius: '10px',
+          fontFamily: 'inherit',
+          fontSize: '0.85rem',
+          fontWeight: 700,
+          letterSpacing: '0.06em',
+          textTransform: 'uppercase',
+          border: 'none',
+          cursor: submitting ? 'not-allowed' : 'pointer',
+          opacity: submitting ? 0.6 : 1,
+          backgroundColor: 'var(--green)',
+          color: '#fff',
+          transition: 'background-color 0.15s, opacity 0.15s',
         }}
         onMouseEnter={(e) => {
-          if (!submitting) {
-            (e.target as HTMLButtonElement).style.backgroundColor = 'var(--matcha-green)'
-          }
+          if (!submitting) (e.currentTarget.style.backgroundColor = 'var(--green-mid)')
         }}
         onMouseLeave={(e) => {
-          (e.target as HTMLButtonElement).style.backgroundColor = 'var(--dark-olive)'
+          if (!submitting) (e.currentTarget.style.backgroundColor = 'var(--green)')
         }}
       >
-        {submitting ? 'Submitting...' : 'Submit Rating'}
+        {submitting ? 'Submitting…' : 'Submit Rating'}
       </button>
     </form>
   )

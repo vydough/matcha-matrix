@@ -3,10 +3,10 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "RMC's Matcha Matrix",
-  description: "A live community rating matrix for Melbourne's best matcha cafes. Rated by taste and style.",
+  description: "A live community rating matrix for Melbourne's best matcha cafes. Rated by taste and texture.",
   openGraph: {
     title: "RMC's Matcha Matrix",
-    description: "Live community ratings of Melbourne's matcha cafes — Sweet vs Bitter, Traditional vs Creative.",
+    description: "Live community ratings of Melbourne's matcha cafes — Creamy vs Earthy, Sweet vs Bitter.",
     type: "website",
   },
 };
