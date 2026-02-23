@@ -241,7 +241,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="site-footer">
-        <p>Ratings update in real time &middot; Made with matcha &amp; love &middot; RMIT Matcha Club</p>
+        <p>Ratings update in real time &middot; Made with matcha &amp; love by Vy (President) &middot; RMIT Matcha Club</p>
       </footer>
     </main>
   )
