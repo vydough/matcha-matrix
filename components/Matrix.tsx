@@ -51,22 +51,22 @@ export default function Matrix() {
       {/* Matrix grid */}
       <div className="matrix-grid" style={{ position: 'relative', width: '100%', height: '100%' }}>
 
-        {/* Corner quadrant labels */}
+        {/* Corner quadrant labels — X: Bitter(left)→Sweet(right), Y: Creamy(top)→Earthy(bottom) */}
         <div className="corner-label corner-tl">
-          <p className="corner-label-title">🥛🍯 Creamy &amp; Sweet</p>
-          <p className="corner-label-desc">Smooth, mellow, easy sipping</p>
-        </div>
-        <div className="corner-label corner-tr">
           <p className="corner-label-title">🥛🍃 Creamy &amp; Bitter</p>
           <p className="corner-label-desc">Rich, deep, velvety bite</p>
         </div>
-        <div className="corner-label corner-bl">
-          <p className="corner-label-title">🌱🍯 Earthy &amp; Sweet</p>
-          <p className="corner-label-desc">Grassy with gentle sweetness</p>
+        <div className="corner-label corner-tr">
+          <p className="corner-label-title">🥛🍯 Creamy &amp; Sweet</p>
+          <p className="corner-label-desc">Smooth, mellow, easy sipping</p>
         </div>
-        <div className="corner-label corner-br">
+        <div className="corner-label corner-bl">
           <p className="corner-label-title">🌱🍃 Earthy &amp; Bitter</p>
           <p className="corner-label-desc">Bold, intense, traditional</p>
+        </div>
+        <div className="corner-label corner-br">
+          <p className="corner-label-title">🌱🍯 Earthy &amp; Sweet</p>
+          <p className="corner-label-desc">Grassy with gentle sweetness</p>
         </div>
 
         {/* Centre crosshair */}

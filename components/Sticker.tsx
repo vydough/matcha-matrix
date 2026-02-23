@@ -8,9 +8,9 @@ type Props = {
   onClick: (cafe: Cafe) => void
 }
 
-function getPositionPercent(avgSweetBitter: number, avgCreativeTraditional: number) {
-  // X-axis: Sweet(-5) → 0% left, Bitter(+5) → 100% left
-  const xPercent = ((avgCreativeTraditional + 5) / 10) * 100
+function getPositionPercent(avgSweetBitter: number, avgCreamyEarthy: number) {
+  // X-axis: Bitter(-5) → 0% left, Sweet(+5) → 100% right
+  const xPercent = ((avgCreamyEarthy + 5) / 10) * 100
   // Y-axis: Creamy(+5) → top (0%), Earthy(-5) → bottom (100%) — inverted
   const yPercent = (1 - ((avgSweetBitter + 5) / 10)) * 100
   return { xPercent, yPercent }

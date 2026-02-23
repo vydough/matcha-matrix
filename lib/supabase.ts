@@ -20,5 +20,5 @@ export type Cafe = {
 export type Rating = {
   cafe_id: string
   sweet_bitter: number
-  creative_traditional: number
+  creamy_earthy: number
 }

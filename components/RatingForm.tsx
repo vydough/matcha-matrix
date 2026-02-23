@@ -9,8 +9,10 @@ type Props = {
 }
 
 export default function RatingForm({ cafeId, onSubmitted }: Props) {
+  // sweet_bitter maps to Y-axis: -5 = Earthy (bottom), +5 = Creamy (top)
   const [sweetBitter, setSweetBitter] = useState(0)
-  const [creativeTraditional, setCreativeTraditional] = useState(0)
+  // creamy_earthy maps to X-axis: -5 = Bitter (left), +5 = Sweet (right)
+  const [creamyEarthy, setCreamyEarthy] = useState(0)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
@@ -25,7 +27,7 @@ export default function RatingForm({ cafeId, onSubmitted }: Props) {
       const rating: Omit<Rating, 'id'> = {
         cafe_id: cafeId,
         sweet_bitter: sweetBitter,
-        creative_traditional: creativeTraditional,
+        creamy_earthy: creamyEarthy,
       }
 
       const { error: insertError } = await supabase.from('ratings').insert([rating])
@@ -49,16 +51,6 @@ export default function RatingForm({ cafeId, onSubmitted }: Props) {
     }
   }
 
-  /*
-    sweet_bitter: Y-axis
-      +5 = top   = Creamy (🥛)
-      -5 = bottom = Earthy (🌱)
-
-    creative_traditional: X-axis
-      -5 = left  = Sweet (🍯)
-      +5 = right = Bitter (🍃)
-  */
-
   const getLabelForCreamyEarthy = (val: number) => {
     if (val >= 4) return '🥛 Very Creamy'
     if (val >= 1) return '🥛 Creamy'
@@ -67,11 +59,12 @@ export default function RatingForm({ cafeId, onSubmitted }: Props) {
     return '🌱 Very Earthy'
   }
 
+  // X-axis: -5 = Bitter (left), +5 = Sweet (right)
   const getLabelForSweetBitter = (val: number) => {
-    if (val <= -4) return '🍯 Very Sweet'
-    if (val <= -1) return '🍯 Sweet'
+    if (val >= 4) return '🍯 Very Sweet'
+    if (val >= 1) return '🍯 Sweet'
     if (val === 0) return 'Balanced'
-    if (val <= 3) return '🍃 Bitter'
+    if (val >= -3) return '🍃 Bitter'
     return '🍃 Very Bitter'
   }
 
@@ -103,7 +96,7 @@ export default function RatingForm({ cafeId, onSubmitted }: Props) {
   return (
     <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', fontFamily: 'var(--font)' }}>
 
-      {/* Texture: Earthy (-5) ← slider → Creamy (+5) */}
+      {/* Y-axis slider: Earthy (-5) ← → Creamy (+5) */}
       <div>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
           <span style={labelStyle}>🌱 Earthy</span>
@@ -120,7 +113,6 @@ export default function RatingForm({ cafeId, onSubmitted }: Props) {
           style={{ display: 'block', width: '100%' }}
           aria-label="Earthy to Creamy rating"
         />
-        {/* Tick marks */}
         <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '2px', padding: '0 2px' }}>
           {ticks.map((t) => (
             <span key={t} style={{
@@ -134,30 +126,29 @@ export default function RatingForm({ cafeId, onSubmitted }: Props) {
         </div>
       </div>
 
-      {/* Sweetness: Sweet (-5) ← slider → Bitter (+5) */}
+      {/* X-axis slider: Bitter (-5) ← → Sweet (+5) */}
       <div>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
-          <span style={labelStyle}>🍯 Sweet</span>
-          <span style={centerLabelStyle}>{getLabelForSweetBitter(creativeTraditional)}</span>
           <span style={labelStyle}>🍃 Bitter</span>
+          <span style={centerLabelStyle}>{getLabelForSweetBitter(creamyEarthy)}</span>
+          <span style={labelStyle}>🍯 Sweet</span>
         </div>
         <input
           type="range"
           min={-5}
           max={5}
           step={1}
-          value={creativeTraditional}
-          onChange={(e) => setCreativeTraditional(parseInt(e.target.value))}
+          value={creamyEarthy}
+          onChange={(e) => setCreamyEarthy(parseInt(e.target.value))}
           style={{ display: 'block', width: '100%' }}
-          aria-label="Sweet to Bitter rating"
+          aria-label="Bitter to Sweet rating"
         />
-        {/* Tick marks */}
         <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '2px', padding: '0 2px' }}>
           {ticks.map((t) => (
             <span key={t} style={{
               ...tickStyle,
-              color: t === creativeTraditional ? 'var(--green)' : 'var(--ink-3)',
-              fontWeight: t === creativeTraditional ? 800 : 500,
+              color: t === creamyEarthy ? 'var(--green)' : 'var(--ink-3)',
+              fontWeight: t === creamyEarthy ? 800 : 500,
             }}>
               {t}
             </span>

@@ -218,7 +218,7 @@ export default function Home() {
 
           {/* Middle row: left label | grid | right label */}
           <div className="axis-slot axis-left">
-            <AxisLabel id="sweet" vertical flip position="right" />
+            <AxisLabel id="bitter" vertical flip position="right" />
           </div>
 
           <div className="matrix-cell">
@@ -226,7 +226,7 @@ export default function Home() {
           </div>
 
           <div className="axis-slot axis-right">
-            <AxisLabel id="bitter" vertical position="left" />
+            <AxisLabel id="sweet" vertical position="left" />
           </div>
 
           {/* Bottom axis label — Earthy */}

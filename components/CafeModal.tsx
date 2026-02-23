@@ -144,7 +144,7 @@ export default function CafeModal({ cafe, onClose, onRatingSubmitted }: Props) {
                   <p style={{ fontSize: '1.2rem', fontWeight: 900, color: 'var(--green)', fontFamily: font }}>
                     {fmt(cafe.avg_creative_traditional)}
                   </p>
-                  <p style={{ fontSize: '0.7rem', color: 'var(--ink-3)', marginTop: 2, fontFamily: font }}>🍯 Sweet / 🍃 Bitter</p>
+                  <p style={{ fontSize: '0.7rem', color: 'var(--ink-3)', marginTop: 2, fontFamily: font }}>🍃 Bitter / 🍯 Sweet</p>
                 </div>
               </div>
             </div>

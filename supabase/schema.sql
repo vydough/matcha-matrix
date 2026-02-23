@@ -22,14 +22,14 @@ create table if not exists cafes (
 -- ────────────────────────────────────────────────────────────
 -- TABLE: ratings
 -- Each row is one user's rating for a cafe.
--- sweet_bitter:         -5 (very bitter) → +5 (very sweet)
--- creative_traditional: -5 (very traditional) → +5 (very creative)
+-- sweet_bitter:  -5 (very earthy) → +5 (very creamy)   [Y-axis]
+-- creamy_earthy: -5 (very bitter) → +5 (very sweet)    [X-axis]
 -- ────────────────────────────────────────────────────────────
 create table if not exists ratings (
   id uuid primary key default gen_random_uuid(),
   cafe_id uuid references cafes(id) on delete cascade,
   sweet_bitter integer check (sweet_bitter >= -5 and sweet_bitter <= 5),
-  creative_traditional integer check (creative_traditional >= -5 and creative_traditional <= 5),
+  creamy_earthy integer check (creamy_earthy >= -5 and creamy_earthy <= 5),
   created_at timestamp default now()
 );
 
@@ -47,7 +47,7 @@ select
   cafes.instagram_handle,
   cafes.sticker_url,
   coalesce(avg(ratings.sweet_bitter), 0) as avg_sweet_bitter,
-  coalesce(avg(ratings.creative_traditional), 0) as avg_creative_traditional,
+  coalesce(avg(ratings.creamy_earthy), 0) as avg_creative_traditional,
   count(ratings.id) as rating_count
 from cafes
 left join ratings on cafes.id = ratings.cafe_id
