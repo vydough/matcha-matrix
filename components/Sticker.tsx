@@ -6,17 +6,23 @@ import { type Cafe } from '@/lib/supabase'
 type Props = {
   cafe: Cafe
   onClick: (cafe: Cafe) => void
+  /** Optional pixel offset to prevent overlapping stickers */
+  nudge?: { dx: number; dy: number }
 }
 
+/**
+ * Convert average ratings → percentage position on the matrix.
+ * X-axis: Bitter(-5) → 0% left,  Sweet(+5) → 100% right   (creamy_earthy / avg_creative_traditional)
+ * Y-axis: Earthy(-5) → 0% bottom, Creamy(+5) → 100% bottom (sweet_bitter)
+ * Uses `left` + `bottom` for precise CSS positioning.
+ */
 function getPositionPercent(avgSweetBitter: number, avgCreamyEarthy: number) {
-  // X-axis: Bitter(-5) → 0% left, Sweet(+5) → 100% right
   const xPercent = ((avgCreamyEarthy + 5) / 10) * 100
-  // Y-axis: Creamy(+5) → top (0%), Earthy(-5) → bottom (100%) — inverted
-  const yPercent = (1 - ((avgSweetBitter + 5) / 10)) * 100
+  const yPercent = ((avgSweetBitter + 5) / 10) * 100   // bottom-based: +5 = top
   return { xPercent, yPercent }
 }
 
-export default function Sticker({ cafe, onClick }: Props) {
+export default function Sticker({ cafe, onClick, nudge }: Props) {
   const { xPercent, yPercent } = getPositionPercent(
     cafe.avg_sweet_bitter,
     cafe.avg_creative_traditional
@@ -32,7 +38,13 @@ export default function Sticker({ cafe, onClick }: Props) {
   return (
     <div
       className="sticker-wrapper"
-      style={{ left: `${xPercent}%`, top: `${yPercent}%` }}
+      style={{
+        left: `${xPercent}%`,
+        bottom: `${yPercent}%`,
+        /* nudge offset for crowding prevention */
+        marginLeft: nudge ? nudge.dx : 0,
+        marginBottom: nudge ? nudge.dy : 0,
+      }}
     >
       <button
         className="sticker"
@@ -40,14 +52,14 @@ export default function Sticker({ cafe, onClick }: Props) {
         aria-label={`Open ${cafe.name} details`}
         title={cafe.name}
       >
-        {/* Sticker image */}
-        <div style={{ position: 'relative', width: 56, height: 56 }}>
+        {/* Sticker image — fixed size, circular, with pop effect */}
+        <div className="sticker-img-wrap" style={{ position: 'relative' }}>
           <Image
             src={cafe.sticker_url}
             alt={cafe.name}
-            width={56}
-            height={56}
-            style={{ objectFit: 'contain', borderRadius: '50%' }}
+            width={42}
+            height={42}
+            style={{ objectFit: 'contain' }}
             onError={(e) => {
               const img = e.target as HTMLImageElement
               img.style.display = 'none'
@@ -65,10 +77,9 @@ export default function Sticker({ cafe, onClick }: Props) {
               backgroundColor: 'var(--green)',
               color: '#fff',
               fontWeight: 900,
-              fontSize: '1rem',
+              fontSize: '0.75rem',
               alignItems: 'center',
               justifyContent: 'center',
-              border: '2.5px solid rgba(255,255,255,0.6)',
             }}
           >
             {initials}
@@ -78,10 +89,10 @@ export default function Sticker({ cafe, onClick }: Props) {
         {/* Name label */}
         <span style={{
           fontFamily: 'var(--font)',
-          fontSize: '0.67rem',
+          fontSize: '0.62rem',
           fontWeight: 700,
           color: 'var(--ink)',
-          maxWidth: 72,
+          maxWidth: 64,
           overflow: 'hidden',
           textOverflow: 'ellipsis',
           whiteSpace: 'nowrap',

@@ -97,6 +97,8 @@ body {
   flex: 1;
   display: flex;
   padding: 1rem 1.5rem 2rem;
+  overflow-x: auto;       /* allow horizontal scroll on mobile */
+  -webkit-overflow-scrolling: touch;
 }
 
 /* CSS grid layout for the axis labels + matrix */
@@ -125,6 +127,27 @@ body {
   grid-area: grid;
   position: relative;
   min-height: 620px;
+  aspect-ratio: 1 / 1;
+}
+
+/* ─── Mobile: keep square, never squish ─── */
+@media (max-width: 768px) {
+  .matrix-section {
+    padding: 0.5rem 0 1.5rem;
+  }
+  .matrix-layout {
+    max-width: none;
+    width: 95vw;
+    min-width: 380px;   /* prevent collapse */
+    margin: 0 auto;
+    grid-template-columns: 40px 1fr 40px;
+    grid-template-rows: 36px 1fr 36px;
+  }
+  .matrix-cell {
+    min-height: unset;
+    aspect-ratio: 1 / 1;
+    width: 100%;
+  }
 }
 
 /* ─────────────────────────────────────────────
@@ -209,11 +232,11 @@ body {
   height: 100%;
   position: relative;
   border-radius: var(--radius);
-  overflow: hidden;
+  overflow: visible;       /* prevent clipping stickers at edges */
   border: 1.5px solid var(--rule);
   background-color: var(--surface);
   /* Dotted background */
-  background-image: radial-gradient(circle, rgba(26,26,26,0.15) 1px, transparent 1px);
+  background-image: radial-gradient(circle, rgba(26,26,26,0.10) 1px, transparent 1px);
   background-size: 28px 28px;
 }
 
@@ -255,9 +278,9 @@ body {
 ───────────────────────────────────────────── */
 .sticker-wrapper {
   position: absolute;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, 50%);  /* center-anchor: left + bottom positioning */
   transition: left 0.45s cubic-bezier(0.34,1.56,0.64,1),
-              top  0.45s cubic-bezier(0.34,1.56,0.64,1);
+              bottom 0.45s cubic-bezier(0.34,1.56,0.64,1);
   z-index: 10;
 }
 
@@ -269,13 +292,42 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 3px;
   transition: transform 0.2s ease;
-  filter: drop-shadow(0 3px 8px rgba(0,0,0,0.20));
   font-family: var(--font);
 }
 
-.sticker:hover { transform: scale(1.1); }
+/* Sticker image container — fixed size, circular, with border + shadow */
+.sticker-img-wrap {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 3px solid #fff;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.sticker-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* Hover: desktop only */
+@media (hover: hover) {
+  .sticker:hover { transform: scale(1.08); }
+}
+
+/* Mobile sticker size */
+@media (max-width: 768px) {
+  .sticker-img-wrap {
+    width: 36px;
+    height: 36px;
+    border-width: 2.5px;
+  }
+}
 
 /* ─────────────────────────────────────────────
    Modal
@@ -459,6 +511,25 @@ input[type='range']::-moz-range-thumb {
   font-size: 0.72rem;
   color: var(--ink-3);
   letter-spacing: 0.03em;
+}
+
+/* ─────────────────────────────────────────────
+   Mobile refinements
+───────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .site-header { padding: 1.5rem 1rem 0.75rem; }
+  .site-title { font-size: clamp(2rem, 9vw, 3rem); }
+  .site-sub { font-size: 0.78rem; }
+
+  .corner-label { padding: 8px 10px; max-width: 140px; }
+  .corner-label-title { font-size: 0.58rem; }
+  .corner-label-desc { font-size: 0.55rem; }
+
+  .logo-fab { bottom: 16px; right: 16px; }
+  .logo-fab-btn { width: 52px; height: 52px; }
+  .logo-popup { width: 230px; bottom: 64px; }
+
+  .axis-label { font-size: 0.62rem; letter-spacing: 0.08em; }
 }
 
 /* ─────────────────────────────────────────────

@@ -1,9 +1,53 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useMemo } from 'react'
 import { supabase, type Cafe } from '@/lib/supabase'
 import Sticker from './Sticker'
 import CafeModal from './CafeModal'
+
+/**
+ * Crowding prevention — if two cafes land at nearly the same coordinate,
+ * nudge them apart by a small random offset so they don't stack exactly.
+ * Returns a Map<cafeId, {dx, dy}> of pixel offsets.
+ */
+function computeNudges(cafes: Cafe[]): Map<string, { dx: number; dy: number }> {
+  const nudges = new Map<string, { dx: number; dy: number }>()
+  const THRESHOLD = 3 // percentage points proximity that counts as "overlapping"
+
+  for (let i = 0; i < cafes.length; i++) {
+    const a = cafes[i]
+    const ax = ((a.avg_creative_traditional + 5) / 10) * 100
+    const ay = ((a.avg_sweet_bitter + 5) / 10) * 100
+
+    for (let j = i + 1; j < cafes.length; j++) {
+      const b = cafes[j]
+      const bx = ((b.avg_creative_traditional + 5) / 10) * 100
+      const by = ((b.avg_sweet_bitter + 5) / 10) * 100
+
+      const dist = Math.sqrt((ax - bx) ** 2 + (ay - by) ** 2)
+      if (dist < THRESHOLD) {
+        // Deterministic offset based on cafe id to keep it stable
+        const seedA = a.id.charCodeAt(0) + a.id.charCodeAt(1)
+        const seedB = b.id.charCodeAt(0) + b.id.charCodeAt(1)
+
+        if (!nudges.has(a.id)) {
+          nudges.set(a.id, {
+            dx: ((seedA % 7) - 3),   // -3 to +3 px
+            dy: ((seedA % 5) - 2),   // -2 to +2 px
+          })
+        }
+        if (!nudges.has(b.id)) {
+          nudges.set(b.id, {
+            dx: -((seedB % 7) - 3),
+            dy: -((seedB % 5) - 2),
+          })
+        }
+      }
+    }
+  }
+
+  return nudges
+}
 
 export default function Matrix() {
   const [cafes, setCafes] = useState<Cafe[]>([])
@@ -45,6 +89,9 @@ export default function Matrix() {
     setSelectedCafe(null)
     fetchCafes()
   }, [fetchCafes])
+
+  // Compute nudge offsets for overlapping stickers
+  const nudgeMap = useMemo(() => computeNudges(cafes), [cafes])
 
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%' }}>
@@ -115,8 +162,13 @@ export default function Matrix() {
         )}
 
         {/* Stickers */}
-        {!loading && cafes.map((cafe) => (
-          <Sticker key={cafe.id} cafe={cafe} onClick={setSelectedCafe} />
+        {!loading && cafes.map((cafe, idx) => (
+          <Sticker
+            key={cafe.id}
+            cafe={cafe}
+            onClick={setSelectedCafe}
+            nudge={nudgeMap.get(cafe.id)}
+          />
         ))}
 
         {/* Empty state */}
