@@ -57,39 +57,53 @@ function AxisLabel({
   const [show, setShow] = useState(false)
   const info = axisTooltips[id]
 
-  const tooltipPositionClass =
-    position === 'top'
-      ? 'top-full left-1/2 -translate-x-1/2 mt-2'
-      : position === 'bottom'
-      ? 'bottom-full left-1/2 -translate-x-1/2 mb-2'
-      : position === 'left'
-      ? 'left-full top-1/2 -translate-y-1/2 ml-2'
-      : 'right-full top-1/2 -translate-y-1/2 mr-2'
+  /*
+   * Tooltip opens INWARD toward the matrix so it stays in view:
+   *   top label    → tooltip appears below
+   *   bottom label → tooltip appears above
+   *   left label   → tooltip appears to the right
+   *   right label  → tooltip appears to the left
+   */
+  const tooltipStyle: React.CSSProperties = (() => {
+    switch (position) {
+      case 'top':
+        return { top: '100%', left: '50%', transform: 'translateX(-50%)', marginTop: 8 }
+      case 'bottom':
+        return { bottom: '100%', left: '50%', transform: 'translateX(-50%)', marginBottom: 8 }
+      case 'left':
+        return { left: '100%', top: '50%', transform: 'translateY(-50%)', marginLeft: 8 }
+      case 'right':
+        return { right: '100%', top: '50%', transform: 'translateY(-50%)', marginRight: 8 }
+    }
+  })()
 
   return (
     <div
-      className="relative flex items-center justify-center"
+      style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
       onMouseEnter={() => setShow(true)}
       onMouseLeave={() => setShow(false)}
     >
       <span
-        className="axis-label cursor-help select-none"
-        style={
-          vertical
+        className="axis-label"
+        style={{
+          cursor: 'help',
+          userSelect: 'none',
+          ...(vertical
             ? {
                 writingMode: 'vertical-rl',
                 transform: flip ? 'rotate(180deg)' : 'none',
               }
-            : {}
-        }
+            : {}),
+        }}
       >
         {info.emoji} {info.label}
       </span>
 
       {show && (
         <div
-          className={`axis-tooltip absolute z-50 ${tooltipPositionClass}`}
+          className="axis-tooltip"
           role="tooltip"
+          style={{ ...tooltipStyle, zIndex: 100, animation: 'none', opacity: 1 }}
         >
           <p className="tooltip-title">
             {info.emoji} {info.label}
