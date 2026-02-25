@@ -13,6 +13,8 @@ export default function RatingForm({ cafeId, onSubmitted }: Props) {
   const [sweetBitter, setSweetBitter] = useState(0)
   // creamy_earthy maps to X-axis: -5 = Bitter (left), +5 = Sweet (right)
   const [creamyEarthy, setCreamyEarthy] = useState(0)
+  // colour_richness: -5 = very dull/muted green, +5 = very vivid/rich green
+  const [colourRichness, setColourRichness] = useState(0)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
@@ -28,6 +30,7 @@ export default function RatingForm({ cafeId, onSubmitted }: Props) {
         cafe_id: cafeId,
         sweet_bitter: sweetBitter,
         creamy_earthy: creamyEarthy,
+        colour_richness: colourRichness,
       }
 
       const { error: insertError } = await supabase.from('ratings').insert([rating])
@@ -59,13 +62,20 @@ export default function RatingForm({ cafeId, onSubmitted }: Props) {
     return '🌱 Very Earthy'
   }
 
-  // X-axis: -5 = Bitter (left), +5 = Sweet (right)
   const getLabelForSweetBitter = (val: number) => {
     if (val >= 4) return '🍯 Very Sweet'
     if (val >= 1) return '🍯 Sweet'
     if (val === 0) return 'Balanced'
     if (val >= -3) return '🍃 Bitter'
     return '🍃 Very Bitter'
+  }
+
+  const getLabelForColourRichness = (val: number) => {
+    if (val >= 4) return '💚 Very Vivid'
+    if (val >= 1) return '💚 Vivid'
+    if (val === 0) return 'Balanced'
+    if (val >= -3) return '🩶 Muted'
+    return '🩶 Very Muted'
   }
 
   const labelStyle: React.CSSProperties = {
@@ -149,6 +159,36 @@ export default function RatingForm({ cafeId, onSubmitted }: Props) {
               ...tickStyle,
               color: t === creamyEarthy ? 'var(--green)' : 'var(--ink-3)',
               fontWeight: t === creamyEarthy ? 800 : 500,
+            }}>
+              {t}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* Colour richness slider: Muted (-5) ← → Vivid (+5) */}
+      <div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+          <span style={labelStyle}>🩶 Muted</span>
+          <span style={centerLabelStyle}>{getLabelForColourRichness(colourRichness)}</span>
+          <span style={labelStyle}>💚 Vivid</span>
+        </div>
+        <input
+          type="range"
+          min={-5}
+          max={5}
+          step={1}
+          value={colourRichness}
+          onChange={(e) => setColourRichness(parseInt(e.target.value))}
+          style={{ display: 'block', width: '100%' }}
+          aria-label="Muted to Vivid colour rating"
+        />
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '2px', padding: '0 2px' }}>
+          {ticks.map((t) => (
+            <span key={t} style={{
+              ...tickStyle,
+              color: t === colourRichness ? 'var(--green)' : 'var(--ink-3)',
+              fontWeight: t === colourRichness ? 800 : 500,
             }}>
               {t}
             </span>

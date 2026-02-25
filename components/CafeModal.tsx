@@ -134,17 +134,24 @@ export default function CafeModal({ cafe, onClose, onRatingSubmitted }: Props) {
               </p>
               <div style={{ display: 'flex', justifyContent: 'space-around' }}>
                 <div style={{ textAlign: 'center' }}>
-                  <p style={{ fontSize: '1.2rem', fontWeight: 900, color: 'var(--green)', fontFamily: font }}>
+                  <p style={{ fontSize: '1.1rem', fontWeight: 900, color: 'var(--green)', fontFamily: font }}>
                     {fmt(cafe.avg_sweet_bitter)}
                   </p>
-                  <p style={{ fontSize: '0.7rem', color: 'var(--ink-3)', marginTop: 2, fontFamily: font }}>🥛 Creamy / 🌱 Earthy</p>
+                  <p style={{ fontSize: '0.62rem', color: 'var(--ink-3)', marginTop: 2, fontFamily: font }}>🥛 Creamy / 🌱 Earthy</p>
                 </div>
                 <div style={{ width: 1, background: 'rgba(61,107,58,0.2)' }} />
                 <div style={{ textAlign: 'center' }}>
-                  <p style={{ fontSize: '1.2rem', fontWeight: 900, color: 'var(--green)', fontFamily: font }}>
+                  <p style={{ fontSize: '1.1rem', fontWeight: 900, color: 'var(--green)', fontFamily: font }}>
                     {fmt(cafe.avg_creative_traditional)}
                   </p>
-                  <p style={{ fontSize: '0.7rem', color: 'var(--ink-3)', marginTop: 2, fontFamily: font }}>🍃 Bitter / 🍯 Sweet</p>
+                  <p style={{ fontSize: '0.62rem', color: 'var(--ink-3)', marginTop: 2, fontFamily: font }}>🍃 Bitter / 🍯 Sweet</p>
+                </div>
+                <div style={{ width: 1, background: 'rgba(61,107,58,0.2)' }} />
+                <div style={{ textAlign: 'center' }}>
+                  <p style={{ fontSize: '1.1rem', fontWeight: 900, color: 'var(--green)', fontFamily: font }}>
+                    {fmt(cafe.avg_colour_richness ?? 0)}
+                  </p>
+                  <p style={{ fontSize: '0.62rem', color: 'var(--ink-3)', marginTop: 2, fontFamily: font }}>🩶 Muted / 💚 Vivid</p>
                 </div>
               </div>
             </div>

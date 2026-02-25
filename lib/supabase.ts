@@ -14,6 +14,7 @@ export type Cafe = {
   sticker_url: string
   avg_sweet_bitter: number
   avg_creative_traditional: number
+  avg_colour_richness: number
   rating_count: number
 }
 
@@ -21,4 +22,5 @@ export type Rating = {
   cafe_id: string
   sweet_bitter: number
   creamy_earthy: number
+  colour_richness: number
 }
