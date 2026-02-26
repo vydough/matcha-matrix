@@ -26,7 +26,7 @@ export default function RatingForm({ cafeId, onSubmitted }: Props) {
     setSuccess(false)
 
     try {
-      const rating: Omit<Rating, 'id'> = {
+      const rating: Rating = {
         cafe_id: cafeId,
         sweet_bitter: sweetBitter,
         creamy_earthy: creamyEarthy,

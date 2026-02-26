@@ -298,23 +298,20 @@ body {
   font-family: var(--font);
 }
 
-/* Sticker image container — fixed size, shape-traced white outline */
+/* Sticker image container — fixed size, shape-traced outline.
+   NOTE: The inline style in Sticker.tsx overrides this filter with a
+   colour-coded ring derived from avg_colour_richness. This CSS acts as
+   a base/fallback only. Keep in sync with Sticker.tsx's filter chain. */
 .sticker-img-wrap {
   width: 42px;
   height: 42px;
   flex-shrink: 0;
-  /* White outline that traces the actual sticker shape, not a circle */
+  /* 4-shadow chain: white inner glow → colour ring → drop shadow */
   filter:
-    drop-shadow(0 0 0 #fff)
-    drop-shadow(1px 0 0 #fff)
-    drop-shadow(-1px 0 0 #fff)
-    drop-shadow(0 1px 0 #fff)
-    drop-shadow(0 -1px 0 #fff)
-    drop-shadow(1.5px 1.5px 0 #fff)
-    drop-shadow(-1.5px -1.5px 0 #fff)
-    drop-shadow(1.5px -1.5px 0 #fff)
-    drop-shadow(-1.5px 1.5px 0 #fff)
-    drop-shadow(0 4px 6px rgba(0,0,0,0.15));
+    drop-shadow(0 0 1px #fff)
+    drop-shadow(0 0 2px #fff)
+    drop-shadow(0 0 4px hsl(120, 47%, 47%))
+    drop-shadow(0 3px 5px rgba(0,0,0,0.13));
 }
 
 .sticker-img-wrap img {
