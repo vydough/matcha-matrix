@@ -1,5 +1,6 @@
 'use client'
 
+import { memo } from 'react'
 import Image from 'next/image'
 import { type Cafe } from '@/lib/supabase'
 
@@ -35,7 +36,7 @@ function colourFromRichness(val: number): string {
   return `hsl(120, ${sat}%, ${lig}%)`
 }
 
-export default function Sticker({ cafe, onClick, nudge }: Props) {
+function Sticker({ cafe, onClick, nudge }: Props) {
   const { xPercent, yPercent } = getPositionPercent(
     cafe.avg_sweet_bitter,
     cafe.avg_creative_traditional
@@ -71,18 +72,13 @@ export default function Sticker({ cafe, onClick, nudge }: Props) {
         <div
           className="sticker-img-wrap"
           style={{
-            // Override the CSS filter with a colour-coded drop-shadow ring
+            // 4-shadow chain: white inner glow → colour ring → drop shadow
+            // Fewer shadows than before for better GPU performance
             filter: `
-              drop-shadow(0 0 0 #fff)
-              drop-shadow(1px 0 0 #fff)
-              drop-shadow(-1px 0 0 #fff)
-              drop-shadow(0 1px 0 #fff)
-              drop-shadow(0 -1px 0 #fff)
-              drop-shadow(2px 2px 0 ${ringColour})
-              drop-shadow(-2px -2px 0 ${ringColour})
-              drop-shadow(2px -2px 0 ${ringColour})
-              drop-shadow(-2px 2px 0 ${ringColour})
-              drop-shadow(0 4px 6px rgba(0,0,0,0.15))
+              drop-shadow(0 0 1px #fff)
+              drop-shadow(0 0 2px #fff)
+              drop-shadow(0 0 4px ${ringColour})
+              drop-shadow(0 3px 5px rgba(0,0,0,0.13))
             `,
           }}
         >
@@ -139,3 +135,5 @@ export default function Sticker({ cafe, onClick, nudge }: Props) {
     </div>
   )
 }
+
+export default memo(Sticker)

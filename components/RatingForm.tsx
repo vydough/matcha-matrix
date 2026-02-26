@@ -33,7 +33,16 @@ export default function RatingForm({ cafeId, onSubmitted }: Props) {
         colour_richness: colourRichness,
       }
 
-      const { error: insertError } = await supabase.from('ratings').insert([rating])
+      let { error: insertError } = await supabase.from('ratings').insert([rating])
+
+      // Graceful fallback: if colour_richness column doesn't exist in DB yet,
+      // retry without it so ratings still submit.
+      if (insertError?.code === 'PGRST204' && insertError.message.includes('colour_richness')) {
+        const { error: fallbackError } = await supabase
+          .from('ratings')
+          .insert([{ cafe_id: cafeId, sweet_bitter: sweetBitter, creamy_earthy: creamyEarthy }])
+        insertError = fallbackError
+      }
 
       if (insertError) {
         console.error('Supabase insert error:', insertError)

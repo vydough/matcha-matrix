@@ -162,7 +162,7 @@ export default function Matrix() {
         )}
 
         {/* Stickers */}
-        {!loading && cafes.map((cafe, idx) => (
+        {!loading && cafes.map((cafe) => (
           <Sticker
             key={cafe.id}
             cafe={cafe}
