@@ -45,8 +45,10 @@ function Sticker({ cafe, onClick, nudge }: Props) {
     cafe.avg_creative_traditional
   )
 
-  // Colour-coded ring based on average colour richness rating
-  const ringColour = colourFromRichness(cafe.avg_colour_richness ?? 0)
+  // Colour-coded ring: default to muted grey when no ratings yet
+  const ringColour = colourFromRichness(
+    cafe.rating_count > 0 ? (cafe.avg_colour_richness ?? 0) : -5
+  )
 
   const initials = cafe.name
     .split(' ')
