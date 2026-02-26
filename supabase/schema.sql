@@ -69,7 +69,7 @@ create policy "Public read cafes"
   on cafes for select
   using (true);
 
--- Anyone can read ratings
+-- Anyone can read ratings (required for realtime subscriptions)
 create policy "Public read ratings"
   on ratings for select
   using (true);
@@ -78,6 +78,15 @@ create policy "Public read ratings"
 create policy "Public insert ratings"
   on ratings for insert
   with check (true);
+
+-- ────────────────────────────────────────────────────────────
+-- ROLE-LEVEL REVOKES (defence in depth)
+-- Even if a bad RLS policy is added later, the role-level
+-- revokes prevent destructive operations at the Postgres level.
+-- ────────────────────────────────────────────────────────────
+revoke update, delete on ratings from anon;
+revoke update, delete on ratings from authenticated;
+revoke insert, update, delete on cafes from anon;
 
 -- ────────────────────────────────────────────────────────────
 -- REALTIME

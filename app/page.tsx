@@ -250,6 +250,16 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Colour-richness legend */}
+      <p className="colour-legend">
+        <span className="colour-legend-label">Ring colour</span>
+        <span className="colour-legend-bar" aria-hidden="true" />
+        <span className="colour-legend-ends">
+          <span>🩶 Muted</span>
+          <span>💚 Vivid</span>
+        </span>
+      </p>
+
       {/* Logo floating sticker */}
       <LogoSticker />
 

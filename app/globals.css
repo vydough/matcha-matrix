@@ -306,12 +306,12 @@ body {
   width: 42px;
   height: 42px;
   flex-shrink: 0;
-  /* 4-shadow chain: white inner glow → colour ring → drop shadow */
+  /* Double-layer colour ring for bold visibility */
   filter:
-    drop-shadow(0 0 1px #fff)
-    drop-shadow(0 0 2px #fff)
-    drop-shadow(0 0 4px hsl(120, 47%, 47%))
-    drop-shadow(0 3px 5px rgba(0,0,0,0.13));
+    drop-shadow(0 0 1.5px #fff)
+    drop-shadow(0 0 4px hsl(120, 42%, 53%))
+    drop-shadow(0 0 8px hsl(120, 42%, 53%))
+    drop-shadow(0 3px 5px rgba(0,0,0,0.12));
 }
 
 .sticker-img-wrap img {
@@ -504,6 +504,48 @@ input[type='range']::-moz-range-thumb {
 .logo-popup-link-icon {
   font-size: 1rem;
   flex-shrink: 0;
+}
+
+/* ─────────────────────────────────────────────
+   Colour-richness legend
+───────────────────────────────────────────── */
+.colour-legend {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin: -0.25rem auto 0.75rem;
+  max-width: 220px;
+  font-family: var(--font);
+}
+
+.colour-legend-label {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.colour-legend-bar {
+  display: block;
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(to right, hsl(120,0%,72%), hsl(120,42%,53%), hsl(120,85%,35%));
+}
+
+.colour-legend-ends {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: var(--ink-3);
+}
+
+@media (max-width: 768px) {
+  .colour-legend { max-width: 180px; }
 }
 
 /* ─────────────────────────────────────────────

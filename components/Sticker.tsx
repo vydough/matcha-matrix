@@ -25,14 +25,17 @@ function getPositionPercent(avgSweetBitter: number, avgCreamyEarthy: number) {
 
 /**
  * Maps colour_richness (-5 to +5) → a CSS hsl() colour.
- * -5 = desaturated olive (muted/dull green)
- *  0 = mid green (neutral)
- * +5 = vivid saturated rich green
+ * -5 = grey (fully desaturated — muted matcha)
+ *  0 = medium green (neutral)
+ * +5 = deep vivid saturated green (vibrant matcha)
+ *
+ * The wide saturation range (0 → 85%) makes the difference
+ * immediately obvious: grey ring = muted, green ring = vivid.
  */
 function colourFromRichness(val: number): string {
-  const t = (val + 5) / 10           // normalise to 0..1
-  const sat = Math.round(20 + t * 55) // 20% (muted) → 75% (vivid)
-  const lig = Math.round(55 - t * 17) // 55% (light) → 38% (rich/dark)
+  const t = (val + 5) / 10            // normalise to 0..1
+  const sat = Math.round(t * 85)      // 0% (pure grey) → 85% (vivid)
+  const lig = Math.round(72 - t * 37) // 72% (light grey) → 35% (deep green)
   return `hsl(120, ${sat}%, ${lig}%)`
 }
 
@@ -72,13 +75,12 @@ function Sticker({ cafe, onClick, nudge }: Props) {
         <div
           className="sticker-img-wrap"
           style={{
-            // 4-shadow chain: white inner glow → colour ring → drop shadow
-            // Fewer shadows than before for better GPU performance
+            // Double-layer colour ring for a bolder, more visible glow
             filter: `
-              drop-shadow(0 0 1px #fff)
-              drop-shadow(0 0 2px #fff)
+              drop-shadow(0 0 1.5px #fff)
               drop-shadow(0 0 4px ${ringColour})
-              drop-shadow(0 3px 5px rgba(0,0,0,0.13))
+              drop-shadow(0 0 8px ${ringColour})
+              drop-shadow(0 3px 5px rgba(0,0,0,0.12))
             `,
           }}
         >
