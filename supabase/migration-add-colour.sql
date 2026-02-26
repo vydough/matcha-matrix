@@ -11,7 +11,9 @@ ALTER TABLE ratings
   CHECK (colour_richness >= -5 AND colour_richness <= 5);
 
 -- 2. Recreate cafe_averages view to include avg_colour_richness
-CREATE OR REPLACE VIEW cafe_averages AS
+--    Must DROP first because CREATE OR REPLACE doesn't allow column structure changes
+DROP VIEW IF EXISTS cafe_averages;
+CREATE VIEW cafe_averages AS
 SELECT
   cafes.id,
   cafes.name,
