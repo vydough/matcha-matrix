@@ -1,7 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Matrix from '@/components/Matrix'
+import AuthModal from '@/components/AuthModal'
+import { getSession, signOut, onAuthStateChange } from '@/lib/auth'
+import type { Session } from '@supabase/supabase-js'
 /* next/image removed — using plain <img> for logo to avoid optimization issues */
 
 /* ─────────────────────────────────────────────
@@ -209,18 +212,109 @@ function LogoSticker() {
    Home page
 ───────────────────────────────────────────── */
 export default function Home() {
+  const [session, setSession] = useState<Session | null>(null)
+  const [authOpen, setAuthOpen] = useState(false)
+  const [loading, setLoading] = useState(true)
+
+  // Check if user is already logged in on mount
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { session } = await getSession()
+      setSession(session)
+      setLoading(false)
+    }
+    checkAuth()
+  }, [])
+
+  // Listen for auth state changes
+  useEffect(() => {
+    const unsubscribe = onAuthStateChange((session) => {
+      setSession(session)
+    })
+    return () => unsubscribe?.()
+  }, [])
+
+  const handleSignOut = async () => {
+    await signOut()
+    setSession(null)
+  }
+
   return (
     <main className="page-root">
       {/* Header */}
       <header className="site-header">
-        <p className="site-eyebrow">RMIT Matcha Club</p>
-        <h1 className="site-title">Matcha Matrix</h1>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
+          <div>
+            <p className="site-eyebrow">RMIT Matcha Club</p>
+            <h1 className="site-title">Matcha Matrix</h1>
+          </div>
+          {!loading && (
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
+              {session ? (
+                <>
+                  <span style={{ fontSize: '0.8rem', color: 'var(--ink-2)', paddingTop: '0.5rem' }}>
+                    {session.user?.email}
+                  </span>
+                  <button
+                    onClick={handleSignOut}
+                    style={{
+                      padding: '0.5rem 1rem',
+                      borderRadius: '8px',
+                      backgroundColor: 'transparent',
+                      border: '1.5px solid var(--green)',
+                      color: 'var(--green)',
+                      fontSize: '0.75rem',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      fontFamily: 'var(--font)',
+                      transition: 'background-color 0.15s',
+                    }}
+                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'rgba(61,107,58,0.08)')}
+                    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
+                  >
+                    Sign Out
+                  </button>
+                </>
+              ) : (
+                <button
+                  onClick={() => setAuthOpen(true)}
+                  style={{
+                    padding: '0.5rem 1rem',
+                    borderRadius: '8px',
+                    backgroundColor: 'var(--green)',
+                    border: 'none',
+                    color: '#fff',
+                    fontSize: '0.75rem',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    fontFamily: 'var(--font)',
+                    transition: 'background-color 0.15s',
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--green-mid)')}
+                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--green)')}
+                >
+                  Sign In
+                </button>
+              )}
+            </div>
+          )}
+        </div>
         <p className="site-sub">
           A live community map of Melbourne&apos;s matcha cafes and their iconic traditional matcha lattes, curated by the RMC team, rated by taste and style by you.
           Click any drink sticker to explore and rate.
         </p>
         <p className="site-attribution">by RMIT Matcha Club</p>
       </header>
+
+      {/* Auth Modal */}
+      {authOpen && (
+        <AuthModal
+          onSuccess={() => {
+            setAuthOpen(false)
+          }}
+          onClose={() => setAuthOpen(false)}
+        />
+      )}
 
       {/* Matrix section */}
       <section className="matrix-section">

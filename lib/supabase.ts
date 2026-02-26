@@ -23,4 +23,5 @@ export type Rating = {
   sweet_bitter: number
   creamy_earthy: number
   colour_richness: number
+  user_id?: string
 }

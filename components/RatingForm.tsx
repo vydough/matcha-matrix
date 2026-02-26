@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { supabase, type Rating } from '@/lib/supabase'
+import { getSession } from '@/lib/auth'
 
 type Props = {
   cafeId: string
@@ -26,11 +27,20 @@ export default function RatingForm({ cafeId, onSubmitted }: Props) {
     setSuccess(false)
 
     try {
+      // Get current user session
+      const { session, error: sessionError } = await getSession()
+      if (sessionError || !session?.user?.id) {
+        setError('You must be signed in to submit a rating.')
+        setSubmitting(false)
+        return
+      }
+
       const rating: Rating = {
         cafe_id: cafeId,
         sweet_bitter: sweetBitter,
         creamy_earthy: creamyEarthy,
         colour_richness: colourRichness,
+        user_id: session.user.id,
       }
 
       let { error: insertError } = await supabase.from('ratings').insert([rating])
