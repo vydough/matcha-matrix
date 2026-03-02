@@ -1,8 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { supabase, type Rating } from '@/lib/supabase'
-import { getSession } from '@/lib/auth'
+import { useState, useEffect } from 'react'
+import { supabase, getSession, type Rating } from '@/lib/supabase'
 
 type Props = {
   cafeId: string
@@ -20,6 +19,48 @@ export default function RatingForm({ cafeId, onSubmitted }: Props) {
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
 
+  // Cooldown state
+  const [cooldownDays, setCooldownDays] = useState<number | null>(null)
+  const [checkingCooldown, setCheckingCooldown] = useState(true)
+
+  // Check if the current user already rated this cafe in the last 30 days
+  useEffect(() => {
+    const checkCooldown = async () => {
+      try {
+        const { session } = await getSession()
+        if (!session?.user?.id) {
+          setCheckingCooldown(false)
+          return
+        }
+
+        const thirtyDaysAgo = new Date()
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
+
+        const { data } = await supabase
+          .from('ratings')
+          .select('created_at')
+          .eq('cafe_id', cafeId)
+          .eq('user_id', session.user.id)
+          .gte('created_at', thirtyDaysAgo.toISOString())
+          .order('created_at', { ascending: false })
+          .limit(1)
+
+        if (data && data.length > 0) {
+          const ratedAt = new Date(data[0].created_at)
+          const expiresAt = new Date(ratedAt.getTime() + 30 * 24 * 60 * 60 * 1000)
+          const remaining = Math.ceil((expiresAt.getTime() - Date.now()) / (24 * 60 * 60 * 1000))
+          setCooldownDays(Math.max(1, remaining))
+        }
+      } catch {
+        // If the query fails (e.g. user_id column doesn't exist yet),
+        // just allow rating — the DB trigger is the real enforcement.
+      }
+      setCheckingCooldown(false)
+    }
+
+    checkCooldown()
+  }, [cafeId])
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setSubmitting(true)
@@ -27,20 +68,15 @@ export default function RatingForm({ cafeId, onSubmitted }: Props) {
     setSuccess(false)
 
     try {
-      // Get current user session
-      const { session, error: sessionError } = await getSession()
-      if (sessionError || !session?.user?.id) {
-        setError('You must be signed in to submit a rating.')
-        setSubmitting(false)
-        return
-      }
+      // Get anonymous session
+      const { session } = await getSession()
 
       const rating: Rating = {
         cafe_id: cafeId,
         sweet_bitter: sweetBitter,
         creamy_earthy: creamyEarthy,
         colour_richness: colourRichness,
-        user_id: session.user.id,
+        ...(session?.user?.id ? { user_id: session.user.id } : {}),
       }
 
       let { error: insertError } = await supabase.from('ratings').insert([rating])
@@ -48,15 +84,26 @@ export default function RatingForm({ cafeId, onSubmitted }: Props) {
       // Graceful fallback: if colour_richness column doesn't exist in DB yet,
       // retry without it so ratings still submit.
       if (insertError?.code === 'PGRST204' && insertError.message.includes('colour_richness')) {
+        const fallbackRating = {
+          cafe_id: cafeId,
+          sweet_bitter: sweetBitter,
+          creamy_earthy: creamyEarthy,
+          ...(session?.user?.id ? { user_id: session.user.id } : {}),
+        }
         const { error: fallbackError } = await supabase
           .from('ratings')
-          .insert([{ cafe_id: cafeId, sweet_bitter: sweetBitter, creamy_earthy: creamyEarthy }])
+          .insert([fallbackRating])
         insertError = fallbackError
       }
 
       if (insertError) {
         console.error('Supabase insert error:', insertError)
-        setError(`Failed to submit: ${insertError.message}`)
+        // Friendly message for the rate-limit trigger
+        if (insertError.message?.includes('rate_limit:')) {
+          setError('You\'ve already rated this cafe this month. Come back later!')
+        } else {
+          setError(`Failed to submit: ${insertError.message}`)
+        }
         setSubmitting(false)
         return
       }
@@ -121,6 +168,36 @@ export default function RatingForm({ cafeId, onSubmitted }: Props) {
   }
 
   const ticks = [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5]
+
+  // Loading state while checking cooldown
+  if (checkingCooldown) {
+    return (
+      <div style={{ textAlign: 'center', padding: '1rem 0', fontFamily: 'var(--font)' }}>
+        <p style={{ fontSize: '0.8rem', color: 'var(--ink-3)' }}>Loading...</p>
+      </div>
+    )
+  }
+
+  // Cooldown active — user already rated this cafe recently
+  if (cooldownDays !== null) {
+    return (
+      <div style={{
+        textAlign: 'center',
+        padding: '1.25rem 1rem',
+        borderRadius: 12,
+        backgroundColor: 'rgba(26,26,26,0.04)',
+        border: '1.5px dashed rgba(26,26,26,0.15)',
+        fontFamily: 'var(--font)',
+      }}>
+        <p style={{ fontSize: '0.85rem', color: 'var(--ink-2)', fontWeight: 600, marginBottom: '0.3rem' }}>
+          You&apos;ve already rated this cafe
+        </p>
+        <p style={{ fontSize: '0.78rem', color: 'var(--ink-3)' }}>
+          Come back in <strong style={{ color: 'var(--green)' }}>{cooldownDays} {cooldownDays === 1 ? 'day' : 'days'}</strong> to rate again.
+        </p>
+      </div>
+    )
+  }
 
   return (
     <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', fontFamily: 'var(--font)' }}>
@@ -251,7 +328,7 @@ export default function RatingForm({ cafeId, onSubmitted }: Props) {
           if (!submitting && !success) (e.currentTarget.style.backgroundColor = 'var(--green)')
         }}
       >
-        {success ? 'Submitted!' : submitting ? 'Submitting…' : 'Submit Rating'}
+        {success ? 'Submitted!' : submitting ? 'Submitting...' : 'Submit Rating'}
       </button>
     </form>
   )

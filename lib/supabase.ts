@@ -1,9 +1,34 @@
-import { createClient } from '@supabase/supabase-js'
+import { createBrowserClient } from '@supabase/ssr'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+/**
+ * Single Supabase client for the whole app.
+ * Uses @supabase/ssr to handle auth sessions in cookies automatically.
+ */
+export const supabase = createBrowserClient(supabaseUrl, supabaseAnonKey)
+
+/**
+ * Ensure the visitor has an anonymous session.
+ * Called once on app mount — invisible to the user.
+ * If the browser already has a session (from a previous visit),
+ * this is a no-op. Otherwise creates a new anonymous user.
+ */
+export async function ensureAnonymousSession() {
+  const { data: { session } } = await supabase.auth.getSession()
+  if (!session) {
+    await supabase.auth.signInAnonymously()
+  }
+}
+
+/**
+ * Get the current auth session (anonymous or otherwise).
+ */
+export async function getSession() {
+  const { data, error } = await supabase.auth.getSession()
+  return { session: data.session, error }
+}
 
 export type Cafe = {
   id: string
